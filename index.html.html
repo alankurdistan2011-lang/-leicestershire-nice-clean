@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Leicestershire Cleaning Group — Professional Cleaning Services</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet"/>
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -622,32 +624,9 @@ footer strong{color:#fff}
     <div class="divider"></div>
 
     <div class="co-section">
-      <div class="co-section-title">Pick a date</div>
-      <div class="cal-wrap">
-        <div class="cal-header">
-          <button type="button" class="cal-nav" id="cal-prev">&#8592;</button>
-          <span class="cal-month-lbl" id="cal-month-label"></span>
-          <button type="button" class="cal-nav" id="cal-next">&#8594;</button>
-        </div>
-        <div class="cal-dow-row">
-          <div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div>
-          <div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div><div class="cal-dow">Su</div>
-        </div>
-        <div class="cal-days" id="cal-days"></div>
-      </div>
-      <div class="co-section-title" style="margin-top:1rem;margin-bottom:0.6rem">Pick a time</div>
-      <div class="time-slots">
-        <button type="button" class="time-slot" data-time="9:00am">9am</button>
-        <button type="button" class="time-slot" data-time="10:00am">10am</button>
-        <button type="button" class="time-slot" data-time="11:00am">11am</button>
-        <button type="button" class="time-slot" data-time="12:00pm">12pm</button>
-        <button type="button" class="time-slot" data-time="1:00pm">1pm</button>
-        <button type="button" class="time-slot" data-time="2:00pm">2pm</button>
-        <button type="button" class="time-slot" data-time="3:00pm">3pm</button>
-        <button type="button" class="time-slot" data-time="4:00pm">4pm</button>
-        <button type="button" class="time-slot" data-time="5:00pm">5pm</button>
-      </div>
-      <div class="datetime-confirm" id="datetime-confirm"></div>
+      <div class="co-section-title">Pick a date &amp; time</div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.75rem">Choose your slot below — once booked this date is automatically blocked so no one else can take it.</p>
+      <div id="calendly-embed" style="min-width:100%;height:630px;border-radius:10px;overflow:hidden"></div>
     </div>
 
     <div class="divider"></div>
@@ -910,14 +889,21 @@ function closeCart() { document.getElementById('cart-drawer').classList.remove('
 // ── CHECKOUT ──
 function openCheckout() {
   closeCart();
-  // populate order summary
-  var summary = document.getElementById('co-summary');
   var total = cart.reduce(function(s,i){return s+i.price;},0);
+  var summary = document.getElementById('co-summary');
   summary.innerHTML = cart.map(function(i){
     return '<div class="co-summary-row"><span>'+i.label+(i.detail?' <span style="font-size:0.75rem;color:var(--muted)">— '+i.detail+'</span>':'')+'</span><span>'+(i.price>0?'£'+i.price:'Quote')+'</span></div>';
   }).join('') + '<div class="co-summary-row total"><span>Total</span><span>'+(total>0?'£'+total:'Quote')+'</span></div>';
   document.getElementById('checkout-modal').classList.add('open');
-  initCalendar();
+  // Load Calendly
+  var el = document.getElementById('calendly-embed');
+  el.innerHTML = '';
+  Calendly.initInlineWidget({
+    url: 'https://calendly.com/aaaplb7/new-meeting',
+    parentElement: el,
+    prefill: {},
+    utm: {}
+  });
 }
 function closeCheckout() { document.getElementById('checkout-modal').classList.remove('open'); openCart(); }
 
@@ -1003,8 +989,7 @@ function submitBooking() {
       Bedrooms: introBedrooms,
       Services: services,
       Total: total > 0 ? '£' + total : 'Quote',
-      Date: selectedDate ? (selectedDate.getDate()+' '+MONTHS[selectedDate.getMonth()]+' '+selectedDate.getFullYear()) : 'Flexible',
-      Time: selectedTime || 'Any',
+      Date_and_Time: 'Booked via Calendly — customer will receive confirmation email',
       Payment: selectedPayment || 'Not specified',
     })
   })
