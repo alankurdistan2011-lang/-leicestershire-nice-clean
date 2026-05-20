@@ -467,6 +467,50 @@ footer strong{color:#fff}
         </div>
       </div>
 
+      <!-- SOFA -->
+      <div class="tile">
+        <div class="tile-icon">🛋️</div>
+        <div class="tile-name">Sofa Cleaning</div>
+        <div class="tile-price">£10 per sofa</div>
+        <button class="tile-info-toggle" onclick="toggleInfo('info-sofa',this)">👁 Click to see all info</button>
+        <div class="tile-details" id="info-sofa">
+          <ul>
+            <li>Cleaned using a professional steam cleaner or water extractor machine</li>
+            <li>Full vacuuming of all sofa surfaces and cushions</li>
+            <li>Stains treated and targeted with specialist products</li>
+            <li>Dirt and grime extracted deep from the fabric</li>
+            <li>Proper drying ensured after cleaning</li>
+          </ul>
+          <div class="d-note">Leaves your sofa fresh, sanitised and looking revived.</div>
+        </div>
+        <div class="qty-label">Quantity / No. of sofas</div>
+        <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
+          <input type="number" id="qty-sofa" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
+          <button class="tile-add" style="flex:1" onclick="quickAdd('sofa')">+ Add</button>
+        </div>
+      </div>
+
+      <!-- FURNITURE -->
+      <div class="tile">
+        <div class="tile-icon">🪑</div>
+        <div class="tile-name">Furniture Cleaning</div>
+        <div class="tile-price">£5 per piece</div>
+        <button class="tile-info-toggle" onclick="toggleInfo('info-furniture',this)">👁 Click to see all info</button>
+        <div class="tile-details" id="info-furniture">
+          <ul>
+            <li>Furniture throughout the house dusted using professional cleaning equipment</li>
+            <li>Dust gently removed from all surfaces, crevices and intricate details</li>
+            <li>Resulting in a pristine, polished clean look</li>
+          </ul>
+          <div class="d-note">Each piece of furniture is carefully cleaned to ensure a thorough finish.</div>
+        </div>
+        <div class="qty-label">Quantity / No. of pieces</div>
+        <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
+          <input type="number" id="qty-furniture" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
+          <button class="tile-add" style="flex:1" onclick="quickAdd('furniture')">+ Add</button>
+        </div>
+      </div>
+
     </div>
 
     <button class="continue-btn" onclick="openCart()" style="max-width:300px;display:block;margin:0 auto">View cart & checkout →</button>
@@ -652,7 +696,7 @@ footer strong{color:#fff}
 var cart = [];
 var introPropType = '', introFloors = '', introBedrooms = '';
 var KITCHEN_APPL = {'single-oven':15,'double-oven':30,'fridge':15,'stove':15,'microwave':15,'freezer':15};
-var PRICES = {bedroom:25,bathroom:50,living:45,dining:25,conservatory:40,utility:15,windows:0,carpet:20};
+var PRICES = {bedroom:25,bathroom:50,living:45,dining:25,conservatory:40,utility:15,windows:0,carpet:20,sofa:10,furniture:5};
 
   function toggleInfo(id, btn) {
     var el = document.getElementById(id);
@@ -660,7 +704,7 @@ var PRICES = {bedroom:25,bathroom:50,living:45,dining:25,conservatory:40,utility
     el.classList.toggle('open', !isOpen);
     btn.textContent = isOpen ? '👁 Click to see all info' : '🔼 Hide info';
   }
-var LABELS = {bedroom:'Bedroom',bathroom:'Bathroom & Toilet',living:'Living / Hallway',dining:'Dining Room',conservatory:'Conservatory',utility:'Utility Room',windows:'Window Cleaning',carpet:'Carpet Clean'};
+var LABELS = {bedroom:'Bedroom',bathroom:'Bathroom & Toilet',living:'Living / Hallway',dining:'Dining Room',conservatory:'Conservatory',utility:'Utility Room',windows:'Window Cleaning',carpet:'Carpet Clean',sofa:'Sofa Cleaning',furniture:'Furniture Cleaning'};
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var selectedDate = null, selectedTime = null, selectedPayment = '';
 var calYear, calMonth;
@@ -753,7 +797,7 @@ function setAddedState(type, added) {
 }
 
 function syncButtonStates() {
-  var tabs = ['bedroom','bathroom','living','dining','conservatory','utility','windows','carpet','kitchen'];
+  var tabs = ['bedroom','bathroom','living','dining','conservatory','utility','windows','carpet','kitchen','sofa','furniture'];
   tabs.forEach(function(type) {
     var inCart = cart.some(function(i) { return i.tab === type; });
     setAddedState(type, inCart);
