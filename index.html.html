@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Leicestershire Cleaning Group — Professional Cleaning Services</title>
+<meta name="google-site-verification" content="PffL3O4Z_m3vjfCkewZIk37HQtWByzmuW667DKMgwG0" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet"/>
 <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
@@ -192,6 +193,9 @@ textarea{resize:vertical;min-height:75px}
 .tile-details ul li::before{content:'✓';position:absolute;left:0;color:var(--mint-mid);font-weight:700;font-size:0.75rem;top:0.22rem}
 .tile-details .d-note{font-style:italic;font-size:0.75rem;margin-top:0.4rem;border-top:1px dashed var(--border);padding-top:0.4rem}
 .qty-label{font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;margin-top:0.6rem;font-weight:500;text-transform:uppercase;letter-spacing:0.4px}
+
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:#fff;padding:0.7rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;z-index:500;transition:transform 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+.toast.show{transform:translateX(-50%) translateY(0)}
 
 footer{background:var(--green-deep);color:rgba(255,255,255,0.6);text-align:center;padding:2rem;font-size:0.85rem}
 footer strong{color:#fff}
@@ -518,9 +522,10 @@ footer strong{color:#fff}
     <button class="continue-btn" onclick="openCart()" style="max-width:300px;display:block;margin:0 auto">View cart & checkout →</button>
   </div>
 
-  <div id="success-box">
-    <h3>🎉 Booking received!</h3>
-    <p>Thank you — we'll be in touch shortly to confirm your appointment.</p>
+  <div id="success-box" style="display:none;text-align:center;padding:2rem;background:rgba(116,201,160,0.1);border-radius:var(--r);border:1px solid rgba(116,201,160,0.4);margin-top:2rem">
+    <h3 style="font-family:var(--display);color:var(--green);font-size:1.5rem;margin-bottom:0.5rem">🎉 Booking received!</h3>
+    <p style="color:var(--muted);margin-bottom:0.75rem">Thank you — we've got your booking details. A calendar is opening so you can pick your date and time to lock in your slot!</p>
+    <a href="https://calendly.com/aaaplb7/new-meeting" target="_blank" style="display:inline-block;background:var(--green);color:#fff;padding:0.7rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none;margin-top:0.5rem">📅 Pick your date & time →</a>
   </div>
 </section>
 
@@ -571,6 +576,8 @@ footer strong{color:#fff}
   <strong>Leicestershire Cleaning Group</strong> — Professional Cleaning Services<br/>
   <span>aaaplb7@gmail.com &nbsp;|&nbsp; 07777 791077 &nbsp;|&nbsp; Local &amp; trusted</span>
 </footer>
+
+<div class="toast" id="toast">✓ Added to cart</div>
 
 <!-- KITCHEN MODAL -->
 <div class="modal-overlay" id="kitchen-modal">
@@ -624,14 +631,6 @@ footer strong{color:#fff}
     <div class="divider"></div>
 
     <div class="co-section">
-      <div class="co-section-title">Pick a date &amp; time</div>
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.75rem">Choose your slot below — once booked this date is automatically blocked so no one else can take it.</p>
-      <div id="calendly-embed" style="min-width:100%;height:630px;border-radius:10px;overflow:hidden"></div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="co-section">
       <div class="co-section-title">Payment — pay on the day at your property</div>
       <div class="pay-opts">
         <button type="button" class="pay-opt" data-val="Cash" onclick="selectPayment(this)">
@@ -666,7 +665,11 @@ footer strong{color:#fff}
       <input type="text" id="cust-address" placeholder="e.g. High Street, Croydon"/>
     </div>
 
-    <button class="co-confirm-btn" onclick="submitBooking()">Send booking request →</button>
+    <div style="background:rgba(116,201,160,0.12);border:1px solid rgba(116,201,160,0.4);border-radius:10px;padding:0.85rem 1rem;font-size:0.85rem;color:var(--green);margin-bottom:1.25rem;">
+      📅 After confirming, you'll be taken to our booking calendar to pick your date and time. This locks your slot so no one else can take it.
+    </div>
+
+    <button class="co-confirm-btn" onclick="submitBooking()">Confirm &amp; Pick a Date →</button>
     <button class="co-close" onclick="closeCheckout()">← Back to cart</button>
   </div>
 </div>
@@ -747,7 +750,8 @@ function quickAdd(type) {
     cart.push(bedItem);
     cart.push(winItem);
     renderCart();
-    openCart();
+    flashBtn(type);
+    showToast();
   } else if (type === 'windows') {
     // Check if bedrooms already in cart — if so, warn
     var hasBedroom = cart.some(function(i) { return i.tab === 'bedroom'; });
@@ -761,7 +765,7 @@ function quickAdd(type) {
   }
 
   if (qEl) qEl.value = 1;
-  flashBtn(type);
+  if (type !== 'bedroom') flashBtn(type);
 }
 
 function setAddedState(type, added) {
@@ -783,10 +787,16 @@ function syncButtonStates() {
   });
 }
 
+function showToast() {
+  var toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2000);
+}
+
 function flashBtn(type) {
   setAddedState(type, true);
-  // For bedroom also mark windows as added
   if (type === 'bedroom') setAddedState('windows', true);
+  showToast();
 }
 
 // ── KITCHEN MODAL ──
@@ -840,6 +850,7 @@ function addKitchenToCart() {
   updateKitchenPreview();
   closeKitchenModal();
   flashBtn('kitchen');
+  showToast();
 }
 
 // ── CART ──
@@ -847,7 +858,6 @@ function addToCart(item) {
   if (!item.tab) item.tab = '';
   cart.push(item);
   renderCart();
-  openCart();
 }
 function removeFromCart(id) {
   var removing = cart.find(function(i){return i.id===id;});
@@ -905,7 +915,7 @@ function openCheckout() {
     utm: {}
   });
 }
-function closeCheckout() { document.getElementById('checkout-modal').classList.remove('open'); openCart(); }
+function closeCheckout() { document.getElementById('checkout-modal').classList.remove('open'); }
 
 // ── PAYMENT ──
 function selectPayment(btn) {
@@ -995,16 +1005,28 @@ function submitBooking() {
   })
   .then(function(res) {
     if (res.ok) {
-      closeCheckout();
-      document.getElementById('services-step').style.display = 'none';
-      document.getElementById('success-box').style.display = 'block';
+      btn.textContent = '✓ Sent!';
+      btn.style.background = 'var(--mint-mid)';
+      btn.style.color = 'var(--green-deep)';
+      setTimeout(function() {
+        closeCheckout();
+        document.getElementById('services-step').style.display = 'none';
+        document.getElementById('success-box').style.display = 'block';
+        window.open('https://calendly.com/aaaplb7/new-meeting', '_blank');
+        btn.textContent = 'Confirm & Pick a Date →';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 2000);
     } else {
-      btn.textContent = 'Confirm & Send Booking →'; btn.disabled = false;
+      btn.textContent = 'Confirm & Pick a Date →'; btn.disabled = false;
+      btn.style.background = ''; btn.style.color = '';
       alert('Something went wrong. Please try again or call us directly.');
     }
   })
   .catch(function() {
-    btn.textContent = 'Confirm & Send Booking →'; btn.disabled = false;
+    btn.textContent = 'Confirm & Pick a Date →'; btn.disabled = false;
+    btn.style.background = ''; btn.style.color = '';
     alert('Something went wrong. Please try again or call us directly.');
   });
 }
