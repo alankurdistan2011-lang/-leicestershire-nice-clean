@@ -194,6 +194,9 @@ textarea{resize:vertical;min-height:75px}
 .tile-details .d-note{font-style:italic;font-size:0.75rem;margin-top:0.4rem;border-top:1px dashed var(--border);padding-top:0.4rem}
 .qty-label{font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;margin-top:0.6rem;font-weight:500;text-transform:uppercase;letter-spacing:0.4px}
 
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:#fff;padding:0.7rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;z-index:500;transition:transform 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
 footer{background:var(--green-deep);color:rgba(255,255,255,0.6);text-align:center;padding:2rem;font-size:0.85rem}
 footer strong{color:#fff}
 </style>
@@ -574,6 +577,8 @@ footer strong{color:#fff}
   <span>aaaplb7@gmail.com &nbsp;|&nbsp; 07777 791077 &nbsp;|&nbsp; Local &amp; trusted</span>
 </footer>
 
+<div class="toast" id="toast">✓ Added to cart</div>
+
 <!-- KITCHEN MODAL -->
 <div class="modal-overlay" id="kitchen-modal">
   <div class="modal">
@@ -745,7 +750,8 @@ function quickAdd(type) {
     cart.push(bedItem);
     cart.push(winItem);
     renderCart();
-    openCart();
+    flashBtn(type);
+    showToast();
   } else if (type === 'windows') {
     // Check if bedrooms already in cart — if so, warn
     var hasBedroom = cart.some(function(i) { return i.tab === 'bedroom'; });
@@ -759,7 +765,7 @@ function quickAdd(type) {
   }
 
   if (qEl) qEl.value = 1;
-  flashBtn(type);
+  if (type !== 'bedroom') flashBtn(type);
 }
 
 function setAddedState(type, added) {
@@ -781,10 +787,16 @@ function syncButtonStates() {
   });
 }
 
+function showToast() {
+  var toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2000);
+}
+
 function flashBtn(type) {
   setAddedState(type, true);
-  // For bedroom also mark windows as added
   if (type === 'bedroom') setAddedState('windows', true);
+  showToast();
 }
 
 // ── KITCHEN MODAL ──
@@ -838,6 +850,7 @@ function addKitchenToCart() {
   updateKitchenPreview();
   closeKitchenModal();
   flashBtn('kitchen');
+  showToast();
 }
 
 // ── CART ──
@@ -845,7 +858,6 @@ function addToCart(item) {
   if (!item.tab) item.tab = '';
   cart.push(item);
   renderCart();
-  openCart();
 }
 function removeFromCart(id) {
   var removing = cart.find(function(i){return i.id===id;});
@@ -875,7 +887,22 @@ function renderCart() {
       '<button class="ci-remove" onclick="removeFromCart('+item.id+')">✕</button></div>';
     body.appendChild(row);
   });
+  var rawTotal = cart.reduce(function(s,i){return s+i.price;},0);
+  var total = Math.max(rawTotal, 180);
   document.getElementById('cart-total').textContent = total > 0 ? '£'+total : 'Quote';
+  if (rawTotal < 180 && rawTotal > 0) {
+    var minNote = document.getElementById('min-price-note');
+    if (!minNote) {
+      minNote = document.createElement('div');
+      minNote.id = 'min-price-note';
+      minNote.style.cssText = 'font-size:0.78rem;color:var(--muted);margin-top:0.4rem;text-align:center';
+      minNote.textContent = 'Minimum booking price is £180';
+      document.getElementById('cart-total').parentNode.appendChild(minNote);
+    }
+  } else {
+    var minNote = document.getElementById('min-price-note');
+    if (minNote) minNote.remove();
+  }
   document.getElementById('checkout-btn').disabled = false;
   var badge = document.getElementById('cart-badge');
   badge.textContent = cart.length; badge.style.display = 'inline';
@@ -887,11 +914,13 @@ function closeCart() { document.getElementById('cart-drawer').classList.remove('
 // ── CHECKOUT ──
 function openCheckout() {
   closeCart();
-  var total = cart.reduce(function(s,i){return s+i.price;},0);
+  var rawTotal = cart.reduce(function(s,i){return s+i.price;},0);
+  var total = Math.max(rawTotal, 180);
   var summary = document.getElementById('co-summary');
   summary.innerHTML = cart.map(function(i){
     return '<div class="co-summary-row"><span>'+i.label+(i.detail?' <span style="font-size:0.75rem;color:var(--muted)">— '+i.detail+'</span>':'')+'</span><span>'+(i.price>0?'£'+i.price:'Quote')+'</span></div>';
-  }).join('') + '<div class="co-summary-row total"><span>Total</span><span>'+(total>0?'£'+total:'Quote')+'</span></div>';
+  }).join('') + (rawTotal < 180 ? '<div class="co-summary-row" style="font-size:0.82rem;color:var(--muted)"><span>Minimum booking applies</span><span></span></div>' : '') +
+  '<div class="co-summary-row total"><span>Total</span><span>'+(total>0?'£'+total:'Quote')+'</span></div>';
   document.getElementById('checkout-modal').classList.add('open');
   // Load Calendly
   var el = document.getElementById('calendly-embed');
@@ -903,7 +932,7 @@ function openCheckout() {
     utm: {}
   });
 }
-function closeCheckout() { document.getElementById('checkout-modal').classList.remove('open'); openCart(); }
+function closeCheckout() { document.getElementById('checkout-modal').classList.remove('open'); }
 
 // ── PAYMENT ──
 function selectPayment(btn) {
@@ -968,7 +997,8 @@ function submitBooking() {
   if (!name || !phone || !email || !house || !address || !postcode) { alert('Please fill in all your details.'); return; }
   if (!cart.length) { alert('Your cart is empty.'); return; }
 
-  var total = cart.reduce(function(s,i){return s+i.price;},0);
+  var rawTotal = cart.reduce(function(s,i){return s+i.price;},0);
+  var total = Math.max(rawTotal, 180);
   var services = cart.map(function(i,idx){ return (idx+1)+'. '+i.label+(i.price>0?' — £'+i.price:' — Quote')+(i.detail?' ('+i.detail+')':''); }).join(' | ');
 
   var btn = document.querySelector('.co-confirm-btn');
@@ -993,20 +1023,28 @@ function submitBooking() {
   })
   .then(function(res) {
     if (res.ok) {
-      closeCheckout();
-      document.getElementById('services-step').style.display = 'none';
-      document.getElementById('success-box').style.display = 'block';
-      // Redirect to Calendly after 1.5 seconds
+      btn.textContent = '✓ Sent!';
+      btn.style.background = 'var(--mint-mid)';
+      btn.style.color = 'var(--green-deep)';
       setTimeout(function() {
+        closeCheckout();
+        document.getElementById('services-step').style.display = 'none';
+        document.getElementById('success-box').style.display = 'block';
         window.open('https://calendly.com/aaaplb7/new-meeting', '_blank');
-      }, 1500);
+        btn.textContent = 'Confirm & Pick a Date →';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 2000);
     } else {
-      btn.textContent = 'Confirm & Send Booking →'; btn.disabled = false;
+      btn.textContent = 'Confirm & Pick a Date →'; btn.disabled = false;
+      btn.style.background = ''; btn.style.color = '';
       alert('Something went wrong. Please try again or call us directly.');
     }
   })
   .catch(function() {
-    btn.textContent = 'Confirm & Send Booking →'; btn.disabled = false;
+    btn.textContent = 'Confirm & Pick a Date →'; btn.disabled = false;
+    btn.style.background = ''; btn.style.color = '';
     alert('Something went wrong. Please try again or call us directly.');
   });
 }
