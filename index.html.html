@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Leicestershire Cleaning Group — Professional Cleaning Services</title>
 <meta name="google-site-verification" content="PffL3O4Z_m3vjfCkewZIk37HQtWByzmuW667DKMgwG0" />
+<script src="https://js.stripe.com/v3/"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet"/>
 <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
@@ -631,17 +632,22 @@ footer strong{color:#fff}
     <div class="divider"></div>
 
     <div class="co-section">
-      <div class="co-section-title">Payment — pay on the day at your property</div>
-      <div class="pay-opts">
+      <div class="co-section-title">Payment method</div>
+      <div class="pay-opts" style="grid-template-columns:repeat(3,1fr)">
         <button type="button" class="pay-opt" data-val="Cash" onclick="selectPayment(this)">
           <span class="pe">💵</span>
           <div class="pt">Cash</div>
-          <div class="ps">Have exact amount ready</div>
+          <div class="ps">Pay on the day</div>
         </button>
         <button type="button" class="pay-opt" data-val="Card" onclick="selectPayment(this)">
           <span class="pe">💳</span>
           <div class="pt">Card</div>
-          <div class="ps">We bring a card reader</div>
+          <div class="ps">Pay on the day</div>
+        </button>
+        <button type="button" class="pay-opt" data-val="Online" onclick="selectPayment(this)">
+          <span class="pe">🌐</span>
+          <div class="pt">Pay Online</div>
+          <div class="ps">Pay now via Stripe</div>
         </button>
       </div>
       <div class="pay-note" id="pay-note"></div>
@@ -669,7 +675,7 @@ footer strong{color:#fff}
       📅 After confirming, you'll be taken to our booking calendar to pick your date and time. This locks your slot so no one else can take it.
     </div>
 
-    <button class="co-confirm-btn" onclick="submitBooking()">Confirm &amp; Pick a Date →</button>
+    <button class="co-confirm-btn" onclick="submitBooking()" id="confirm-btn">Confirm &amp; Pick a Date →</button>
     <button class="co-close" onclick="closeCheckout()">← Back to cart</button>
   </div>
 </div>
@@ -887,7 +893,22 @@ function renderCart() {
       '<button class="ci-remove" onclick="removeFromCart('+item.id+')">✕</button></div>';
     body.appendChild(row);
   });
+  var rawTotal = cart.reduce(function(s,i){return s+i.price;},0);
+  var total = Math.max(rawTotal, 180);
   document.getElementById('cart-total').textContent = total > 0 ? '£'+total : 'Quote';
+  if (rawTotal < 180 && rawTotal > 0) {
+    var minNote = document.getElementById('min-price-note');
+    if (!minNote) {
+      minNote = document.createElement('div');
+      minNote.id = 'min-price-note';
+      minNote.style.cssText = 'font-size:0.78rem;color:var(--muted);margin-top:0.4rem;text-align:center';
+      minNote.textContent = 'Minimum booking price is £180';
+      document.getElementById('cart-total').parentNode.appendChild(minNote);
+    }
+  } else {
+    var minNote = document.getElementById('min-price-note');
+    if (minNote) minNote.remove();
+  }
   document.getElementById('checkout-btn').disabled = false;
   var badge = document.getElementById('cart-badge');
   badge.textContent = cart.length; badge.style.display = 'inline';
@@ -899,11 +920,13 @@ function closeCart() { document.getElementById('cart-drawer').classList.remove('
 // ── CHECKOUT ──
 function openCheckout() {
   closeCart();
-  var total = cart.reduce(function(s,i){return s+i.price;},0);
+  var rawTotal = cart.reduce(function(s,i){return s+i.price;},0);
+  var total = Math.max(rawTotal, 180);
   var summary = document.getElementById('co-summary');
   summary.innerHTML = cart.map(function(i){
     return '<div class="co-summary-row"><span>'+i.label+(i.detail?' <span style="font-size:0.75rem;color:var(--muted)">— '+i.detail+'</span>':'')+'</span><span>'+(i.price>0?'£'+i.price:'Quote')+'</span></div>';
-  }).join('') + '<div class="co-summary-row total"><span>Total</span><span>'+(total>0?'£'+total:'Quote')+'</span></div>';
+  }).join('') + (rawTotal < 180 ? '<div class="co-summary-row" style="font-size:0.82rem;color:var(--muted)"><span>Minimum booking applies</span><span></span></div>' : '') +
+  '<div class="co-summary-row total"><span>Total</span><span>'+(total>0?'£'+total:'Quote')+'</span></div>';
   document.getElementById('checkout-modal').classList.add('open');
   // Load Calendly
   var el = document.getElementById('calendly-embed');
@@ -922,9 +945,17 @@ function selectPayment(btn) {
   document.querySelectorAll('.pay-opt').forEach(function(b){b.classList.remove('active')});
   btn.classList.add('active'); selectedPayment = btn.dataset.val;
   var note = document.getElementById('pay-note'); note.style.display = 'block';
-  note.textContent = selectedPayment === 'Cash'
-    ? '💵 Please have the exact amount ready on the day. Our cleaner will collect payment at your property.'
-    : '💳 Our cleaner will bring a card reader on the day so you can pay by card at your property.';
+  var confirmBtn = document.getElementById('confirm-btn');
+  if (selectedPayment === 'Cash') {
+    note.textContent = '💵 Please have the exact amount ready on the day. Our cleaner will collect payment at your property.';
+    confirmBtn.textContent = 'Confirm & Pick a Date →';
+  } else if (selectedPayment === 'Card') {
+    note.textContent = '💳 Our cleaner will bring a card reader on the day so you can pay by card at your property.';
+    confirmBtn.textContent = 'Confirm & Pick a Date →';
+  } else if (selectedPayment === 'Online') {
+    note.textContent = '🌐 You will be taken to a secure Stripe payment page after confirming. Your total will be pre-filled automatically.';
+    confirmBtn.textContent = 'Confirm & Pay Online →';
+  }
 }
 
 // ── CALENDAR ──
@@ -980,7 +1011,8 @@ function submitBooking() {
   if (!name || !phone || !email || !house || !address || !postcode) { alert('Please fill in all your details.'); return; }
   if (!cart.length) { alert('Your cart is empty.'); return; }
 
-  var total = cart.reduce(function(s,i){return s+i.price;},0);
+  var rawTotal = cart.reduce(function(s,i){return s+i.price;},0);
+  var total = Math.max(rawTotal, 180);
   var services = cart.map(function(i,idx){ return (idx+1)+'. '+i.label+(i.price>0?' — £'+i.price:' — Quote')+(i.detail?' ('+i.detail+')':''); }).join(' | ');
 
   var btn = document.querySelector('.co-confirm-btn');
@@ -1012,7 +1044,11 @@ function submitBooking() {
         closeCheckout();
         document.getElementById('services-step').style.display = 'none';
         document.getElementById('success-box').style.display = 'block';
-        window.open('https://calendly.com/aaaplb7/new-meeting', '_blank');
+        if (selectedPayment === 'Online') {
+          window.open('https://buy.stripe.com/cNi4gy211elM2eV7Rq6g800?prefilled_amount=' + (total * 100), '_blank');
+        } else {
+          window.open('https://calendly.com/aaaplb7/new-meeting', '_blank');
+        }
         btn.textContent = 'Confirm & Pick a Date →';
         btn.style.background = '';
         btn.style.color = '';
