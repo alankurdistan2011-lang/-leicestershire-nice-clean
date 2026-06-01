@@ -457,17 +457,19 @@ footer strong{color:#fff}
       <!-- CARPET -->
       <div class="tile">
         <div class="tile-icon">🧹</div>
-        <div class="tile-name">Carpet Clean</div>
-        <div class="tile-price">£20 per room</div>
+        <div class="tile-name">Deep Carpet Clean</div>
+        <div class="tile-price">£20 per area</div>
+        <div style="background:rgba(116,201,160,0.12);border-radius:6px;padding:0.3rem 0.6rem;font-size:0.72rem;color:var(--green);margin-bottom:0.4rem;font-weight:500">✓ Hoovering / vacuuming pre-included</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-carpet',this)">👁 Click to see all info</button>
         <div class="tile-details" id="info-carpet">
           <ul>
-            <li>Professional carpet clean for each selected room</li>
-            <li>Deep clean removes dirt, stains and built-up odours</li>
-            <li>Leaves carpets fresh, soft and revived</li>
+            <li>Deep carpet clean per area</li>
+            <li>Hoovering / vacuuming carpets is pre-included with every clean</li>
+            <li>Carpet cleaning using steam / water extractor carpet clean machine</li>
           </ul>
+          <div class="d-note">We cannot guarantee all marks/stains will be completely removed.</div>
         </div>
-        <div class="qty-label">Quantity / No. of rooms</div>
+        <div class="qty-label">Quantity / No. of areas</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-carpet" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
           <button class="tile-add" style="flex:1" onclick="quickAdd('carpet')">+ Add</button>
@@ -692,7 +694,7 @@ var PRICES = {bedroom:25,bathroom:50,living:45,dining:25,conservatory:40,utility
     el.classList.toggle('open', !isOpen);
     btn.textContent = isOpen ? '👁 Click to see all info' : '🔼 Hide info';
   }
-var LABELS = {bedroom:'Bedroom',bathroom:'Bathroom & Toilet',living:'Living / Hallway',dining:'Dining Room',conservatory:'Conservatory',utility:'Utility Room',windows:'Window Cleaning',carpet:'Carpet Clean',sofa:'Sofa Cleaning',furniture:'Furniture Cleaning'};
+var LABELS = {bedroom:'Bedroom',bathroom:'Bathroom & Toilet',living:'Living / Hallway',dining:'Dining Room',conservatory:'Conservatory',utility:'Utility Room',windows:'Window Cleaning',carpet:'Deep Carpet Clean',sofa:'Sofa Cleaning',furniture:'Furniture Cleaning'};
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var selectedDate = null, selectedTime = null, selectedPayment = '';
 var calYear, calMonth;
