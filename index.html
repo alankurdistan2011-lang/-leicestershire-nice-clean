@@ -195,6 +195,13 @@ textarea{resize:vertical;min-height:75px}
 .tile-details .d-note{font-style:italic;font-size:0.75rem;margin-top:0.4rem;border-top:1px dashed var(--border);padding-top:0.4rem}
 .qty-label{font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;margin-top:0.6rem;font-weight:500;text-transform:uppercase;letter-spacing:0.4px}
 
+.svc-type-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;margin-bottom:1.5rem}
+  .svc-type-btn{padding:0.9rem;border:1.5px solid var(--border);border-radius:10px;background:var(--cream);text-align:left;cursor:pointer;transition:all 0.18s;font-family:var(--body)}
+  .svc-type-btn:hover{border-color:var(--mint-mid);background:rgba(116,201,160,0.08)}
+  .svc-type-btn.active{border-color:var(--green);background:rgba(26,92,58,0.07);box-shadow:0 0 0 3px rgba(26,92,58,0.08)}
+  .svc-type-emoji{font-size:1.4rem;display:block;margin-bottom:0.3rem}
+  .svc-type-name{font-size:0.88rem;font-weight:600;color:var(--green);margin-bottom:0.25rem}
+  .svc-type-desc{font-size:0.75rem;color:var(--muted);line-height:1.4}
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:#fff;padding:0.7rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;z-index:500;transition:transform 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
@@ -249,6 +256,40 @@ footer strong{color:#fff}
         <button type="button" class="opt-btn" data-val="3"><span class="e">3️⃣</span>3 floors</button>
         <button type="button" class="opt-btn" data-val="4+"><span class="e">🏗️</span>4+ floors</button>
       </div>
+    </div>
+
+    <label class="field-label" style="margin-top:0.5rem">What type of clean do you need? <span style="color:var(--mint-mid);font-weight:400;text-transform:none;letter-spacing:0;font-size:0.78rem">(select one or more)</span></label>
+    <div class="svc-type-grid" id="svc-type-grid">
+      <button type="button" class="svc-type-btn" data-val="End Of Tenancy Cleaning">
+        <span class="svc-type-emoji">🔑</span>
+        <div class="svc-type-name">End Of Tenancy Cleaning</div>
+        <div class="svc-type-desc">Thorough property cleaning for tenants, landlords and property managers before moving out or in.</div>
+      </button>
+      <button type="button" class="svc-type-btn" data-val="Deep Cleaning">
+        <span class="svc-type-emoji">🧽</span>
+        <div class="svc-type-name">Deep Cleaning</div>
+        <div class="svc-type-desc">Intensive cleaning targeting neglected areas, removing deep-seated dirt, grime and bacteria, ideal for homes not cleaned regularly.</div>
+      </button>
+      <button type="button" class="svc-type-btn" data-val="After Builders Cleaning">
+        <span class="svc-type-emoji">🏗️</span>
+        <div class="svc-type-name">After Builders Cleaning</div>
+        <div class="svc-type-desc">Post-renovation cleaning leaving your space spotless and dust-free, ready for immediate use. Quick, efficient and hassle-free.</div>
+      </button>
+      <button type="button" class="svc-type-btn" data-val="Carpet & Upholstery Cleaning">
+        <span class="svc-type-emoji">🧹</span>
+        <div class="svc-type-name">Carpet &amp; Upholstery Cleaning</div>
+        <div class="svc-type-desc">Professional cleaning removing allergens, dirt and odours, leaving your carpets and furnishings refreshed and stain-free.</div>
+      </button>
+      <button type="button" class="svc-type-btn" data-val="Appliances Cleaning">
+        <span class="svc-type-emoji">🔥</span>
+        <div class="svc-type-name">Appliances Cleaning</div>
+        <div class="svc-type-desc">Professional cleaning for your appliances, keeping them spotless and fully functional. Convenient and reliable.</div>
+      </button>
+      <button type="button" class="svc-type-btn" data-val="Commercial Cleaning">
+        <span class="svc-type-emoji">🏢</span>
+        <div class="svc-type-name">Commercial Cleaning</div>
+        <div class="svc-type-desc">Professional cleaning for offices, retail stores and commercial spaces, ensuring a clean and hygienic environment.</div>
+      </button>
     </div>
 
     <button class="continue-btn" onclick="continueToServices()">Continue →</button>
@@ -709,9 +750,25 @@ document.getElementById('floors-grid').addEventListener('click', function(e) {
   document.querySelectorAll('#floors-grid .opt-btn').forEach(function(b){b.classList.remove('active')});
   btn.classList.add('active'); introFloors = btn.dataset.val;
 });
+var selectedSvcTypes = [];
+
+document.getElementById('svc-type-grid').addEventListener('click', function(e) {
+  var btn = e.target.closest('.svc-type-btn');
+  if (!btn) return;
+  var val = btn.dataset.val;
+  if (btn.classList.contains('active')) {
+    btn.classList.remove('active');
+    selectedSvcTypes = selectedSvcTypes.filter(function(v){ return v !== val; });
+  } else {
+    btn.classList.add('active');
+    selectedSvcTypes.push(val);
+  }
+});
+
 function continueToServices() {
   if (!introPropType) { alert('Please select your property type.'); return; }
   if (introPropType === 'House' && !introFloors) { alert('Please select how many floors.'); return; }
+  if (!selectedSvcTypes.length) { alert('Please select at least one type of clean.'); return; }
   document.getElementById('ps-type').textContent = introPropType;
   var flEl = document.getElementById('ps-floors');
   if (introFloors) { flEl.textContent = introFloors + ' floor' + (introFloors==='1'?'':'s'); flEl.style.display=''; }
@@ -1024,6 +1081,7 @@ function submitBooking() {
       Email: email,
       Address: house + ' ' + address + ', ' + postcode,
       Property_Type: introPropType + (introFloors ? ', ' + introFloors + ' floor(s)' : ''),
+      Clean_Type: selectedSvcTypes.join(', ') || 'Not specified',
       Bedrooms: introBedrooms,
       Services: services,
       Total: total > 0 ? '£' + total : 'Quote',
