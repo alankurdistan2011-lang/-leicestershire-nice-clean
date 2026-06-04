@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Leicestershire Cleaning Group — Professional Cleaning Services</title>
+<meta name="google-site-verification" content="PffL3O4Z_m3vjfCkewZIk37HQtWByzmuW667DKMgwG0" />
+<script src="https://js.stripe.com/v3/"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --mint:#d4f0e4;--mint-mid:#74c9a0;
+  --green:#1a5c3a;--green-deep:#0d3322;
+  --cream:#faf9f6;--warm:#f5f3ee;
+  --text:#1a1a1a;--muted:#5c5c5c;
+  --border:rgba(0,0,0,0.1);--r:14px;
+  --display:'Playfair Display',Georgia,serif;
+  --body:'DM Sans',sans-serif;
+}
+body{font-family:var(--body);background:var(--cream);color:var(--text);line-height:1.6;overflow-x:hidden}
+nav{position:sticky;top:0;z-index:200;background:rgba(250,249,246,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--display);font-size:1.4rem;color:var(--green)}
+.nav-logo span{color:var(--mint-mid)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.cart-nav-btn{background:var(--green);color:#fff;border:none;padding:0.5rem 1.1rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:0.5rem;transition:background 0.2s}
+.cart-nav-btn:hover{background:var(--green-deep)}
+.cart-badge{background:var(--mint-mid);color:var(--green-deep);border-radius:100px;padding:0.05rem 0.45rem;font-size:0.75rem;font-weight:700;display:none}
+.hero{min-height:88vh;background:linear-gradient(135deg,var(--green-deep) 0%,var(--green) 55%,#2a7a52 100%);display:flex;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(116,201,160,0.15) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(212,240,228,0.1) 0%,transparent 40%)}
+.hero-content{position:relative;max-width:680px}
+.hero-badge{display:inline-block;background:rgba(212,240,228,0.15);border:1px solid rgba(212,240,228,0.3);color:var(--mint);padding:0.35rem 1rem;border-radius:100px;font-size:0.78rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.5rem}
+.hero h1{font-family:var(--display);font-size:clamp(2.6rem,6vw,4.5rem);color:#fff;line-height:1.1;margin-bottom:1.25rem}
+.hero h1 em{color:var(--mint-mid);font-style:normal}
+.hero p{font-size:1.1rem;color:rgba(255,255,255,0.75);max-width:440px;margin:0 auto 2.5rem}
+.hero-btn{background:var(--mint-mid);color:var(--green-deep);padding:1rem 2.5rem;border-radius:100px;font-size:1rem;font-weight:500;text-decoration:none;display:inline-block;transition:transform 0.2s,background 0.2s}
+.hero-btn:hover{background:var(--mint);transform:translateY(-2px)}
+.book-section{max-width:1100px;margin:0 auto;padding:4rem 2rem 6rem}
+.book-section>h2{font-family:var(--display);font-size:clamp(1.8rem,3vw,2.4rem);text-align:center;margin-bottom:0.4rem}
+.book-section>.sub{text-align:center;color:var(--muted);margin-bottom:3rem}
+
+/* WIZARD STEPS */
+.wizard-step{display:none}
+.wizard-step.active{display:block}
+.step-card{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:2rem;margin-bottom:2rem;box-shadow:0 2px 20px rgba(0,0,0,0.04)}
+.step-card h3{font-family:var(--display);font-size:1.25rem;color:var(--green);margin-bottom:0.3rem}
+.step-card>.sub{font-size:0.9rem;color:var(--muted);margin-bottom:1.5rem}
+
+/* STEP INDICATOR */
+.step-indicator{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:2rem}
+.step-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background 0.2s}
+.step-dot.active{background:var(--green);transform:scale(1.2)}
+.step-dot.done{background:var(--mint-mid)}
+.step-label{font-size:0.8rem;color:var(--muted);text-align:center;margin-bottom:1.5rem}
+
+.opt-grid{display:grid;gap:0.6rem;margin-bottom:1.25rem}
+.opt-grid.cols3{grid-template-columns:repeat(3,1fr)}
+.opt-grid.cols4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:540px){.opt-grid.cols3,.opt-grid.cols4{grid-template-columns:repeat(2,1fr)}}
+.opt-btn{padding:0.75rem 0.5rem;border:1.5px solid var(--border);border-radius:10px;background:var(--cream);color:var(--muted);font-family:var(--body);font-size:0.85rem;font-weight:500;cursor:pointer;transition:all 0.18s;text-align:center;line-height:1.4}
+.opt-btn .e{display:block;font-size:1.5rem;margin-bottom:0.25rem}
+.opt-btn:hover{border-color:var(--mint-mid);color:var(--green);background:rgba(116,201,160,0.08)}
+.opt-btn.active{border-color:var(--green);background:rgba(26,92,58,0.07);color:var(--green);box-shadow:0 0 0 3px rgba(26,92,58,0.08)}
+
+.svc-type-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;margin-bottom:1.5rem}
+.svc-type-btn{padding:0.9rem;border:1.5px solid var(--border);border-radius:10px;background:var(--cream);text-align:left;cursor:pointer;transition:all 0.18s;font-family:var(--body)}
+.svc-type-btn:hover{border-color:var(--mint-mid);background:rgba(116,201,160,0.08)}
+.svc-type-btn.active{border-color:var(--green);background:rgba(26,92,58,0.07);box-shadow:0 0 0 3px rgba(26,92,58,0.08)}
+.svc-type-emoji{font-size:1.4rem;display:block;margin-bottom:0.3rem}
+.svc-type-name{font-size:0.88rem;font-weight:600;color:var(--green);margin-bottom:0.25rem}
+.svc-type-desc{font-size:0.75rem;color:var(--muted);line-height:1.4}
+
+.field-label{display:block;font-size:0.82rem;font-weight:500;color:var(--muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.5px}
+input[type="number"],input[type="text"],input[type="email"],input[type="tel"],textarea{width:100%;padding:0.7rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-family:var(--body);font-size:0.95rem;background:var(--cream);color:var(--text);transition:border-color 0.2s;margin-bottom:1.25rem}
+input:focus,textarea:focus{outline:none;border-color:var(--mint-mid)}
+textarea{resize:vertical;min-height:75px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:520px){.field-row{grid-template-columns:1fr}}
+
+/* NAV BUTTONS */
+.btn-row{display:flex;gap:0.75rem;margin-top:0.5rem}
+.continue-btn{flex:1;padding:0.9rem;background:var(--green);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-size:1rem;font-weight:500;cursor:pointer;transition:background 0.2s}
+.continue-btn:hover{background:var(--green-deep)}
+.back-btn{padding:0.9rem 1.5rem;background:var(--warm);color:var(--muted);border:1.5px solid var(--border);border-radius:12px;font-family:var(--body);font-size:1rem;cursor:pointer;transition:all 0.2s}
+.back-btn:hover{border-color:var(--muted);color:var(--text)}
+
+/* SERVICE TILES */
+#services-step{display:none}
+.prop-summary{background:var(--warm);border-radius:10px;padding:0.7rem 1rem;margin-bottom:1.75rem;font-size:0.88rem;color:var(--green);font-weight:500;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;border:1px solid var(--border)}
+.prop-summary span{background:var(--mint);border-radius:100px;padding:0.15rem 0.65rem;font-size:0.78rem}
+.prop-summary button{margin-left:auto;background:none;border:none;color:var(--muted);font-size:0.8rem;cursor:pointer;text-decoration:underline;font-family:var(--body)}
+.tiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:0.85rem;margin-bottom:2rem;align-items:start}
+@media(max-width:480px){.tiles-grid{grid-template-columns:1fr 1fr}}
+.tile{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:1rem;display:flex;flex-direction:column;transition:box-shadow 0.2s,transform 0.2s}
+.tile:hover{box-shadow:0 6px 24px rgba(0,0,0,0.07);transform:translateY(-2px)}
+.tile-icon{font-size:1.8rem;margin-bottom:0.5rem}
+.tile-name{font-size:0.95rem;font-weight:500;color:var(--green);margin-bottom:0.2rem}
+.tile-price{font-size:0.82rem;color:var(--mint-mid);font-weight:600;margin-bottom:0.75rem}
+.tile-add{width:100%;padding:0.55rem;background:var(--green);color:#fff;border:none;border-radius:8px;font-family:var(--body);font-size:0.88rem;font-weight:500;cursor:pointer;transition:background 0.18s;margin-top:auto}
+.tile-add:hover{background:var(--green-deep)}
+.tile-add.added{background:var(--mint-mid);color:var(--green-deep)}
+.tile-info-toggle{font-size:0.73rem;color:var(--mint-mid);cursor:pointer;background:none;border:none;font-family:var(--body);padding:0;margin-bottom:0.5rem;text-decoration:underline;text-underline-offset:2px}
+.tile-details{display:none;font-size:0.77rem;color:var(--muted);line-height:1.45;margin-bottom:0.6rem;background:var(--warm);border-radius:7px;padding:0.55rem 0.7rem}
+.tile-details.open{display:block}
+.tile-details ul{list-style:none;padding:0}
+.tile-details ul li{padding:0.15rem 0 0.15rem 1rem;position:relative}
+.tile-details ul li::before{content:'✓';position:absolute;left:0;color:var(--mint-mid);font-weight:700;font-size:0.75rem;top:0.22rem}
+.tile-details .d-note{font-style:italic;font-size:0.75rem;margin-top:0.4rem;border-top:1px dashed var(--border);padding-top:0.4rem}
+.qty-label{font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;margin-top:0.6rem;font-weight:500;text-transform:uppercase;letter-spacing:0.4px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:300;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:var(--r);padding:2rem;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal h3{font-family:var(--display);font-size:1.3rem;color:var(--green);margin-bottom:0.3rem}
+.modal>.sub{font-size:0.88rem;color:var(--muted);margin-bottom:1.25rem}
+.appl-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.25rem}
+.appl-item{background:var(--warm);border-radius:10px;padding:0.75rem 0.9rem;border:1.5px solid transparent;cursor:pointer;transition:all 0.18s}
+.appl-item.sel{border-color:var(--mint-mid);background:rgba(116,201,160,0.1)}
+.appl-item label{display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;font-weight:500;cursor:pointer}
+.appl-item input[type="checkbox"]{width:16px;height:16px;accent-color:var(--green);flex-shrink:0}
+.appl-item .qrow{display:none;margin-top:0.5rem;align-items:center;gap:0.4rem;font-size:0.78rem;color:var(--muted)}
+.appl-item.sel .qrow{display:flex}
+.appl-item .qrow input{width:52px;padding:0.25rem 0.4rem;font-size:0.82rem;margin:0;border-radius:6px}
+.modal-btns{display:flex;gap:0.75rem;margin-top:0.5rem}
+.modal-cancel{flex:1;padding:0.75rem;background:var(--warm);color:var(--muted);border:1.5px solid var(--border);border-radius:10px;font-family:var(--body);font-size:0.9rem;cursor:pointer}
+.modal-confirm{flex:2;padding:0.75rem;background:var(--green);color:#fff;border:none;border-radius:10px;font-family:var(--body);font-size:0.9rem;font-weight:500;cursor:pointer}
+.modal-confirm:hover{background:var(--green-deep)}
+
+/* CART */
+.cart-drawer{position:fixed;right:0;top:0;bottom:0;width:360px;background:#fff;box-shadow:-4px 0 40px rgba(0,0,0,0.12);z-index:250;transform:translateX(100%);transition:transform 0.3s ease;display:flex;flex-direction:column}
+.cart-drawer.open{transform:translateX(0)}
+@media(max-width:420px){.cart-drawer{width:100%}}
+.cart-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cart-header h3{font-family:var(--display);font-size:1.2rem;color:var(--green)}
+.cart-close{background:none;border:none;font-size:1.4rem;color:var(--muted);cursor:pointer}
+.cart-body{flex:1;overflow-y:auto;padding:1rem 1.5rem}
+.cart-empty{text-align:center;color:var(--muted);font-size:0.9rem;padding:2rem 0}
+.cart-item{display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem;padding:0.85rem 0;border-bottom:1px solid var(--border)}
+.cart-item:last-child{border-bottom:none}
+.ci-name{font-weight:500;font-size:0.92rem}
+.ci-detail{font-size:0.78rem;color:var(--muted);margin-top:0.1rem}
+.ci-right{display:flex;align-items:center;gap:0.5rem;flex-shrink:0}
+.ci-price{font-weight:600;color:var(--green);font-size:0.92rem}
+.ci-remove{background:none;border:none;color:#ccc;font-size:0.95rem;cursor:pointer;padding:0.1rem 0.25rem;border-radius:4px}
+.ci-remove:hover{color:#e55}
+.cart-footer{padding:1.25rem 1.5rem;border-top:1px solid var(--border)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.cart-total-label{font-size:0.9rem;color:var(--muted)}
+.cart-total-val{font-family:var(--display);font-size:1.5rem;color:var(--green);font-weight:700}
+.checkout-btn{width:100%;padding:0.9rem;background:var(--green);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-size:1rem;font-weight:500;cursor:pointer;transition:background 0.2s}
+.checkout-btn:hover{background:var(--green-deep)}
+.checkout-btn:disabled{background:#ccc;cursor:default}
+
+/* CHECKOUT */
+.checkout-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:400;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
+.checkout-modal.open{display:flex}
+.co-box{background:#fff;border-radius:var(--r);padding:2rem;max-width:520px;width:100%;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.co-box h3{font-family:var(--display);font-size:1.4rem;color:var(--green);margin-bottom:1.5rem}
+.co-section{margin-bottom:1.5rem}
+.co-section-title{font-size:0.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:0.75rem}
+.divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.pay-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:0}
+.pay-opt{padding:0.85rem;border:1.5px solid var(--border);border-radius:10px;background:var(--cream);text-align:center;cursor:pointer;transition:all 0.18s;font-family:var(--body)}
+.pay-opt .pe{display:block;font-size:1.5rem;margin-bottom:0.25rem}
+.pay-opt .pt{font-size:0.85rem;font-weight:500;color:var(--muted)}
+.pay-opt .ps{font-size:0.75rem;color:var(--muted);margin-top:0.1rem}
+.pay-opt:hover{border-color:var(--mint-mid);background:rgba(116,201,160,0.08)}
+.pay-opt.active{border-color:var(--green);background:rgba(26,92,58,0.07);box-shadow:0 0 0 3px rgba(26,92,58,0.08)}
+.pay-opt.active .pt,.pay-opt.active .ps{color:var(--green)}
+.pay-note{background:rgba(116,201,160,0.12);border:1px solid rgba(116,201,160,0.4);border-radius:10px;padding:0.75rem 1rem;font-size:0.85rem;color:var(--green);margin-top:0.75rem;display:none}
+.co-summary{background:var(--warm);border-radius:10px;padding:1rem;margin-bottom:1.25rem}
+.co-summary-row{display:flex;justify-content:space-between;font-size:0.88rem;padding:0.2rem 0}
+.co-summary-row.total{font-weight:600;font-size:1rem;border-top:1px solid var(--border);padding-top:0.5rem;margin-top:0.4rem;color:var(--green)}
+.co-confirm-btn{width:100%;padding:1rem;background:var(--green);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-size:1rem;font-weight:500;cursor:pointer;transition:background 0.2s}
+.co-confirm-btn:hover{background:var(--green-deep)}
+.co-close{background:none;border:none;color:var(--muted);font-size:0.85rem;width:100%;margin-top:0.75rem;cursor:pointer;text-decoration:underline;font-family:var(--body)}
+
+.furn-item{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.6rem;border-radius:8px;background:var(--warm);border:1.5px solid transparent;margin-bottom:0.4rem}
+.furn-item-img{font-size:1.6rem;width:36px;text-align:center;flex-shrink:0}
+.furn-item-info{flex:1;min-width:0}
+.furn-item-name{font-size:0.82rem;font-weight:500;color:var(--green)}
+.furn-item-price{font-size:0.72rem;color:var(--mint-mid);font-weight:600}
+.furn-item-qty{display:flex;align-items:center;gap:0.3rem;flex-shrink:0}
+.furn-qty-btn{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:#fff;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--green);font-weight:700;line-height:1;transition:all 0.15s}
+.furn-qty-btn:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.furn-qty-num{font-size:0.82rem;font-weight:600;color:var(--text);min-width:16px;text-align:center}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:#fff;padding:0.7rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;z-index:500;transition:transform 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+footer{background:var(--green-deep);color:rgba(255,255,255,0.6);text-align:center;padding:2rem;font-size:0.85rem}
+footer strong{color:#fff}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Leicestershire Cleaning <span>Group</span></div>
+  <div class="nav-right">
+    <a href="#contact" style="font-size:0.88rem;color:var(--muted);text-decoration:none;font-family:var(--body);font-weight:500">Contact</a>
+    <button class="cart-nav-btn" onclick="openCart()">🛒 Cart <span class="cart-badge" id="cart-badge">0</span></button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Professional Cleaning Services</div>
+    <h1>Your home, <em>spotlessly</em> clean.</h1>
+    <p>Trusted local cleaners bringing a fresh finish to every room, window, and surface — every time.</p>
+    <a class="hero-btn" href="#book">Book Now</a>
+  </div>
+</section>
+
+<section class="book-section" id="book">
+  <h2>Book a Clean</h2>
+  <p class="sub">Just a few quick steps — done in minutes.</p>
+
+  <!-- STEP INDICATOR -->
+  <div class="step-indicator" id="step-indicator">
+    <div class="step-dot active" id="dot-1"></div>
+    <div style="width:30px;height:2px;background:var(--border)"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div style="width:30px;height:2px;background:var(--border)"></div>
+    <div class="step-dot" id="dot-3"></div>
+  </div>
+  <div class="step-label" id="step-label">Step 1 of 3 — Type of clean</div>
+
+  <!-- WIZARD STEP 1: TYPE OF CLEAN -->
+  <div class="wizard-step active" id="wizard-1">
+    <div class="step-card">
+      <h3>What type of clean do you need?</h3>
+      <p class="sub">Select one or more that apply to your booking.</p>
+      <div class="svc-type-grid" id="svc-type-grid">
+        <button type="button" class="svc-type-btn" data-val="End Of Tenancy Cleaning">
+          <span class="svc-type-emoji">🔑</span>
+          <div class="svc-type-name">End Of Tenancy Cleaning</div>
+          <div class="svc-type-desc">Thorough property cleaning for tenants, landlords and property managers before moving out or in.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="Deep Cleaning">
+          <span class="svc-type-emoji">🧽</span>
+          <div class="svc-type-name">Deep Cleaning</div>
+          <div class="svc-type-desc">Intensive cleaning targeting neglected areas, removing deep-seated dirt, grime and bacteria, ideal for homes not cleaned regularly.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="After Builders Cleaning">
+          <span class="svc-type-emoji">🏗️</span>
+          <div class="svc-type-name">After Builders Cleaning</div>
+          <div class="svc-type-desc">Post-renovation cleaning leaving your space spotless and dust-free, ready for immediate use. Quick, efficient and hassle-free.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="Carpet & Upholstery Cleaning">
+          <span class="svc-type-emoji">🧹</span>
+          <div class="svc-type-name">Carpet &amp; Upholstery Cleaning</div>
+          <div class="svc-type-desc">Professional cleaning removing allergens, dirt and odours, leaving your carpets and furnishings refreshed and stain-free.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="Appliances Cleaning">
+          <span class="svc-type-emoji">🔥</span>
+          <div class="svc-type-name">Appliances Cleaning</div>
+          <div class="svc-type-desc">Professional cleaning for your appliances, keeping them spotless and fully functional. Convenient and reliable.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="Commercial Cleaning">
+          <span class="svc-type-emoji">🏢</span>
+          <div class="svc-type-name">Commercial Cleaning</div>
+          <div class="svc-type-desc">Professional cleaning for offices, retail stores and commercial spaces, ensuring a clean and hygienic environment.</div>
+        </button>
+      </div>
+      <button class="continue-btn" onclick="goToStep2()">Next →</button>
+    </div>
+  </div>
+
+  <!-- WIZARD STEP 2: PROPERTY TYPE -->
+  <div class="wizard-step" id="wizard-2">
+    <div class="step-card">
+      <h3>About your property</h3>
+      <p class="sub">This helps us prepare the right team for your home.</p>
+      <label class="field-label">Property type</label>
+      <div class="opt-grid cols3" id="prop-type-grid">
+        <button type="button" class="opt-btn" data-val="House"><span class="e">🏠</span>House</button>
+        <button type="button" class="opt-btn" data-val="Apartment"><span class="e">🏢</span>Apartment</button>
+        <button type="button" class="opt-btn" data-val="Flat"><span class="e">🏡</span>Flat</button>
+      </div>
+      <div id="floors-section" style="display:none">
+        <label class="field-label">How many floors?</label>
+        <div class="opt-grid cols4" id="floors-grid">
+          <button type="button" class="opt-btn" data-val="1"><span class="e">1️⃣</span>1 floor</button>
+          <button type="button" class="opt-btn" data-val="2"><span class="e">2️⃣</span>2 floors</button>
+          <button type="button" class="opt-btn" data-val="3"><span class="e">3️⃣</span>3 floors</button>
+          <button type="button" class="opt-btn" data-val="4+"><span class="e">🏗️</span>4+ floors</button>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="back-btn" onclick="goToStep(1)">← Back</button>
+        <button class="continue-btn" onclick="goToStep3()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIZARD STEP 3: SERVICES -->
+  <div class="wizard-step" id="wizard-3">
+    <div class="prop-summary" id="prop-summary">
+      <span id="ps-type"></span>
+      <span id="ps-floors" style="display:none"></span>
+      <span id="ps-clean-type" style="font-size:0.75rem;opacity:0.8"></span>
+      <button onclick="goToStep(1)">← Change</button>
+    </div>
+    <h3 style="font-family:var(--display);font-size:1.15rem;color:var(--green);margin-bottom:0.3rem">3. Add services to your cart</h3>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1.5rem">Tap a service to add it. Kitchen lets you choose appliances first.</p>
+
+    <div class="tiles-grid">
+      <div class="tile"><div class="tile-icon">🛏️</div><div class="tile-name">Bedroom</div><div class="tile-price">£25 per room</div><button class="tile-add" onclick="openServiceModal('bedroom')">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🍳</div><div class="tile-name">Kitchen</div><div class="tile-price">from £55</div><button class="tile-add" onclick="openKitchenModal()">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🛁</div><div class="tile-name">Bathroom</div><div class="tile-price">£50 per room</div><button class="tile-add" onclick="openServiceModal('bathroom')">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🛋️</div><div class="tile-name">Living / Hallway</div><div class="tile-price">£45 per area</div><button class="tile-add" onclick="openServiceModal('living')">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🍽️</div><div class="tile-name">Dining Room</div><div class="tile-price">£25</div><button class="tile-add" onclick="openServiceModal('dining')">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🌿</div><div class="tile-name">Conservatory</div><div class="tile-price">£40</div><button class="tile-add" onclick="openServiceModal('conservatory')">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🔧</div><div class="tile-name">Utility Room</div><div class="tile-price">£15</div><button class="tile-add" onclick="openServiceModal('utility')">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🪟</div><div class="tile-name">Windows</div><div class="tile-price">from £15</div><button class="tile-add" onclick="openServiceModal('windows')">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🧹</div><div class="tile-name">Deep Carpet Clean</div><div class="tile-price">£20 per area</div><button class="tile-add" onclick="openServiceModal('carpet')">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🛋️</div><div class="tile-name">Sofa Cleaning</div><div class="tile-price">£10 per sofa</div><button class="tile-add" onclick="openServiceModal('sofa')">+ Add</button></div>
+      <div class="tile"><div class="tile-icon">🪑</div><div class="tile-name">Furniture Cleaning</div><div class="tile-price">from £2 per item</div><button class="tile-add" onclick="openFurnitureModal()">+ Add</button></div>
+    </div>
+
+    <button class="continue-btn" onclick="openCart()" style="max-width:300px;display:block;margin:0 auto">View cart & checkout →</button>
+  </div>
+
+  <div id="success-box" style="display:none;text-align:center;padding:2rem;background:rgba(116,201,160,0.1);border-radius:var(--r);border:1px solid rgba(116,201,160,0.4);margin-top:2rem">
+    <h3 style="font-family:var(--display);color:var(--green);font-size:1.5rem;margin-bottom:0.5rem">🎉 Booking received!</h3>
+    <p style="color:var(--muted);margin-bottom:0.75rem">Thank you — we've got your booking details. A calendar is opening so you can pick your date and time to lock in your slot!</p>
+    <a href="https://calendly.com/aaaplb7/new-meeting" target="_blank" style="display:inline-block;background:var(--green);color:#fff;padding:0.7rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none;margin-top:0.5rem">📅 Pick your date & time →</a>
+  </div>
+</section>
+
+<section id="contact" style="background:var(--warm);border-top:1px solid var(--border);padding:4rem 2rem">
+  <div style="max-width:700px;margin:0 auto;text-align:center">
+    <h2 style="font-family:var(--display);font-size:clamp(1.6rem,3vw,2.2rem);color:var(--green);margin-bottom:0.5rem">Get in touch</h2>
+    <p style="color:var(--muted);font-size:0.95rem;margin-bottom:2.5rem">Have a question before booking? We're happy to help.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem">
+      <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:1.75rem 1.25rem;text-align:center">
+        <div style="font-size:2rem;margin-bottom:0.6rem">📞</div>
+        <div style="font-family:var(--display);font-size:1rem;color:var(--green);margin-bottom:0.3rem">Call us</div>
+        <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Mon–Sat, 9am–5pm</div>
+        <a href="tel:07777791077" style="display:inline-block;background:var(--green);color:#fff;padding:0.6rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none">Call now</a>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:0.6rem">07777 791077</div>
+      </div>
+      <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:1.75rem 1.25rem;text-align:center">
+        <div style="font-size:2rem;margin-bottom:0.6rem">✉️</div>
+        <div style="font-family:var(--display);font-size:1rem;color:var(--green);margin-bottom:0.3rem">Email us</div>
+        <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">We reply within a few hours</div>
+        <a href="mailto:aaaplb7@gmail.com" style="display:inline-block;background:var(--green);color:#fff;padding:0.6rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none">Send email</a>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:0.6rem">aaaplb7@gmail.com</div>
+      </div>
+      <div style="background:var(--green);border-radius:14px;padding:1.75rem 1.25rem;text-align:center">
+        <div style="font-size:2rem;margin-bottom:0.6rem">📅</div>
+        <div style="font-family:var(--display);font-size:1rem;color:#fff;margin-bottom:0.3rem">Book online</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1rem">Quick &amp; easy — takes 2 minutes</div>
+        <a href="#book" style="display:inline-block;background:var(--mint-mid);color:var(--green-deep);padding:0.6rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none">Book now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>Leicestershire Cleaning Group</strong> — Professional Cleaning Services<br/>
+  <span>aaaplb7@gmail.com &nbsp;|&nbsp; 07777 791077 &nbsp;|&nbsp; Local &amp; trusted</span>
+</footer>
+
+<div class="toast" id="toast">✓ Added to cart</div>
+
+<!-- SERVICE MODAL -->
+<div class="modal-overlay" id="service-modal">
+  <div class="modal">
+    <h3 id="svc-modal-title"></h3>
+    <p class="sub" id="svc-modal-price"></p>
+    <div id="svc-modal-includes" style="background:var(--warm);border-radius:10px;padding:0.9rem 1rem;margin-bottom:1.25rem;font-size:0.85rem"></div>
+    <div id="svc-modal-qty-section">
+      <label class="field-label" id="svc-modal-qty-label">Quantity</label>
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem">
+        <button class="furn-qty-btn" style="width:32px;height:32px;font-size:1.1rem" onclick="svcModalQty(-1)">−</button>
+        <span id="svc-modal-qty-num" style="font-size:1.2rem;font-weight:700;color:var(--green);min-width:24px;text-align:center">1</span>
+        <button class="furn-qty-btn" style="width:32px;height:32px;font-size:1.1rem" onclick="svcModalQty(1)">+</button>
+        <span style="font-size:0.85rem;color:var(--muted)" id="svc-modal-unit-price"></span>
+      </div>
+      <div style="font-size:1rem;font-weight:600;color:var(--green);margin-bottom:1.25rem">Total: £<span id="svc-modal-total">0</span></div>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeServiceModal()">Cancel</button>
+      <button class="modal-confirm" onclick="confirmServiceModal()">+ Add to cart</button>
+    </div>
+  </div>
+</div>
+
+<!-- FURNITURE MODAL -->
+<div class="modal-overlay" id="furniture-modal">
+  <div class="modal">
+    <h3>🪑 Furniture Cleaning</h3>
+    <p class="sub">Select items and quantities — prices shown per item</p>
+    <div id="furn-modal-items">
+      <div class="furn-item"><div class="furn-item-img">🛋️</div><div class="furn-item-info"><div class="furn-item-name">Single Sofa</div><div class="furn-item-price">£5 each</div></div><div class="furn-item-qty"><button class="furn-qty-btn" onclick="furnQty('single-sofa',-1)">−</button><span class="furn-qty-num" id="furn-num-single-sofa">0</span><button class="furn-qty-btn" onclick="furnQty('single-sofa',1)">+</button></div></div>
+      <div class="furn-item"><div class="furn-item-img">🛋️</div><div class="furn-item-info"><div class="furn-item-name">Double / Triple Sofa</div><div class="furn-item-price">£10 each</div></div><div class="furn-item-qty"><button class="furn-qty-btn" onclick="furnQty('double-sofa',-1)">−</button><span class="furn-qty-num" id="furn-num-double-sofa">0</span><button class="furn-qty-btn" onclick="furnQty('double-sofa',1)">+</button></div></div>
+      <div class="furn-item"><div class="furn-item-img">🪟</div><div class="furn-item-info"><div class="furn-item-name">Blinds</div><div class="furn-item-price">£5 each</div></div><div class="furn-item-qty"><button class="furn-qty-btn" onclick="furnQty('blinds',-1)">−</button><span class="furn-qty-num" id="furn-num-blinds">0</span><button class="furn-qty-btn" onclick="furnQty('blinds',1)">+</button></div></div>
+      <div class="furn-item"><div class="furn-item-img">📺</div><div class="furn-item-info"><div class="furn-item-name">TV Table / Stand</div><div class="furn-item-price">£5 each</div></div><div class="furn-item-qty"><button class="furn-qty-btn" onclick="furnQty('tv-stand',-1)">−</button><span class="furn-qty-num" id="furn-num-tv-stand">0</span><button class="furn-qty-btn" onclick="furnQty('tv-stand',1)">+</button></div></div>
+      <div class="furn-item"><div class="furn-item-img">🪑</div><div class="furn-item-info"><div class="furn-item-name">Chair</div><div class="furn-item-price">£2 each</div></div><div class="furn-item-qty"><button class="furn-qty-btn" onclick="furnQty('chair',-1)">−</button><span class="furn-qty-num" id="furn-num-chair">0</span><button class="furn-qty-btn" onclick="furnQty('chair',1)">+</button></div></div>
+      <div class="furn-item"><div class="furn-item-img">🪑</div><div class="furn-item-info"><div class="furn-item-name">Footstool</div><div class="furn-item-price">£2 each</div></div><div class="furn-item-qty"><button class="furn-qty-btn" onclick="furnQty('footstool',-1)">−</button><span class="furn-qty-num" id="furn-num-footstool">0</span><button class="furn-qty-btn" onclick="furnQty('footstool',1)">+</button></div></div>
+      <div class="furn-item"><div class="furn-item-img">📚</div><div class="furn-item-info"><div class="furn-item-name">Bookshelf</div><div class="furn-item-price">£4 each</div></div><div class="furn-item-qty"><button class="furn-qty-btn" onclick="furnQty('bookshelf',-1)">−</button><span class="furn-qty-num" id="furn-num-bookshelf">0</span><button class="furn-qty-btn" onclick="furnQty('bookshelf',1)">+</button></div></div>
+      <div class="furn-item" style="flex-direction:column;align-items:flex-start;gap:0.3rem">
+        <div style="display:flex;align-items:center;gap:0.5rem;width:100%"><div class="furn-item-img">✏️</div><div class="furn-item-info"><div class="furn-item-name">Other furniture</div><div class="furn-item-price">£4 per item</div></div><div class="furn-item-qty"><button class="furn-qty-btn" onclick="furnQty('other',-1)">−</button><span class="furn-qty-num" id="furn-num-other">0</span><button class="furn-qty-btn" onclick="furnQty('other',1)">+</button></div></div>
+        <input type="text" id="furn-other-desc" placeholder="Describe the furniture (e.g. wardrobe, desk...)" style="width:100%;margin:0.3rem 0 0;padding:0.4rem 0.6rem;font-size:0.78rem;border-radius:7px"/>
+      </div>
+    </div>
+    <div style="font-size:1rem;font-weight:600;color:var(--green);margin:1rem 0">Total: £<span id="furn-total">0</span></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeFurnitureModal()">Cancel</button>
+      <button class="modal-confirm" onclick="addFurnitureToCart()">+ Add to cart</button>
+    </div>
+  </div>
+</div>
+
+<!-- KITCHEN MODAL -->
+<div class="modal-overlay" id="kitchen-modal">
+  <div class="modal">
+    <h3>🍳 Kitchen Deep Clean</h3>
+    <p class="sub">Base clean £55 — add any appliances below</p>
+    <div class="appl-grid">
+      <div class="appl-item" id="ai-single-oven"><label><input type="checkbox" id="cb-single-oven"> 🔥 Single Oven <strong>+£15</strong></label><div class="qrow"><span>Qty:</span><input type="number" id="qty-single-oven" min="1" value="1" onclick="event.stopPropagation()"/></div></div>
+      <div class="appl-item" id="ai-double-oven"><label><input type="checkbox" id="cb-double-oven"> 🔥 Double Oven <strong>+£30</strong></label><div class="qrow"><span>Qty:</span><input type="number" id="qty-double-oven" min="1" value="1" onclick="event.stopPropagation()"/></div></div>
+      <div class="appl-item" id="ai-fridge"><label><input type="checkbox" id="cb-fridge"> 🧊 Fridge <strong>+£15</strong></label><div class="qrow"><span>Qty:</span><input type="number" id="qty-fridge" min="1" value="1" onclick="event.stopPropagation()"/></div></div>
+      <div class="appl-item" id="ai-stove"><label><input type="checkbox" id="cb-stove"> 🍲 Stove/Hob <strong>+£15</strong></label><div class="qrow"><span>Qty:</span><input type="number" id="qty-stove" min="1" value="1" onclick="event.stopPropagation()"/></div></div>
+      <div class="appl-item" id="ai-microwave"><label><input type="checkbox" id="cb-microwave"> 📡 Microwave <strong>+£15</strong></label><div class="qrow"><span>Qty:</span><input type="number" id="qty-microwave" min="1" value="1" onclick="event.stopPropagation()"/></div></div>
+      <div class="appl-item" id="ai-freezer"><label><input type="checkbox" id="cb-freezer"> ❄️ Freezer <strong>+£15</strong></label><div class="qrow"><span>Qty:</span><input type="number" id="qty-freezer" min="1" value="1" onclick="event.stopPropagation()"/></div></div>
+    </div>
+    <div style="font-size:0.88rem;font-weight:600;color:var(--green);margin-bottom:1rem">Total: £<span id="kitchen-price-preview">55</span></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeKitchenModal()">Cancel</button>
+      <button class="modal-confirm" onclick="addKitchenToCart()">+ Add to cart</button>
+    </div>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header"><h3>🛒 Your cart</h3><button class="cart-close" onclick="closeCart()">✕</button></div>
+  <div class="cart-body" id="cart-body"><div class="cart-empty">Your cart is empty.<br/>Add a service to get started.</div></div>
+  <div class="cart-footer">
+    <div class="cart-total-row"><span class="cart-total-label">Estimated total</span><span class="cart-total-val" id="cart-total">£0</span></div>
+    <button class="checkout-btn" id="checkout-btn" onclick="openCheckout()" disabled>Checkout →</button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="checkout-modal" id="checkout-modal">
+  <div class="co-box">
+    <h3>Confirm your booking</h3>
+    <div class="co-section"><div class="co-section-title">Order summary</div><div class="co-summary" id="co-summary"></div></div>
+    <div class="divider"></div>
+    <div class="co-section">
+      <div class="co-section-title">Payment method</div>
+      <div class="pay-opts">
+        <button type="button" class="pay-opt" data-val="Cash" onclick="selectPayment(this)"><span class="pe">💵</span><div class="pt">Cash</div><div class="ps">Pay on the day</div></button>
+        <button type="button" class="pay-opt" data-val="Card" onclick="selectPayment(this)"><span class="pe">💳</span><div class="pt">Card</div><div class="ps">Pay on the day</div></button>
+        <button type="button" class="pay-opt" data-val="Online" onclick="selectPayment(this)"><span class="pe">🌐</span><div class="pt">Pay Online</div><div class="ps">Pay now via Stripe</div></button>
+      </div>
+      <div class="pay-note" id="pay-note"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="co-section">
+      <div class="co-section-title">Your details</div>
+      <div class="field-row">
+        <div><label class="field-label">Full name</label><input type="text" id="cust-name" placeholder="Jane Smith"/></div>
+        <div><label class="field-label">Phone</label><input type="tel" id="cust-phone" placeholder="+44 7700 000000"/></div>
+      </div>
+      <label class="field-label">Email</label><input type="email" id="cust-email" placeholder="jane@example.com"/>
+      <div class="field-row">
+        <div><label class="field-label">House no.</label><input type="text" id="cust-house" placeholder="42"/></div>
+        <div><label class="field-label">Postcode</label><input type="text" id="cust-postcode" placeholder="CR0 1AA"/></div>
+      </div>
+      <label class="field-label">Street address</label><input type="text" id="cust-address" placeholder="e.g. High Street, Croydon"/>
+    </div>
+    <div style="background:rgba(116,201,160,0.12);border:1px solid rgba(116,201,160,0.4);border-radius:10px;padding:0.85rem 1rem;font-size:0.85rem;color:var(--green);margin-bottom:1.25rem;">📅 After confirming, you'll be taken to our booking calendar to pick your date and time.</div>
+    <button class="co-confirm-btn" onclick="submitBooking()" id="confirm-btn">Confirm &amp; Pick a Date →</button>
+    <button class="co-close" onclick="closeCheckout()">← Back to cart</button>
+  </div>
+</div>
+
+<script>
+var cart = [];
+var introPropType = '', introFloors = '';
+var selectedSvcTypes = [];
+var selectedPayment = '';
+var KITCHEN_APPL = {'single-oven':15,'double-oven':30,'fridge':15,'stove':15,'microwave':15,'freezer':15};
+var PRICES = {bedroom:25,bathroom:50,living:45,dining:25,conservatory:40,utility:15,windows:0,carpet:20,sofa:10,furniture:5};
+var LABELS = {bedroom:'Bedroom',bathroom:'Bathroom & Toilet',living:'Living / Hallway',dining:'Dining Room',conservatory:'Conservatory',utility:'Utility Room',windows:'Window Cleaning',carpet:'Deep Carpet Clean',sofa:'Sofa Cleaning',furniture:'Furniture Cleaning'};
+
+// ── WIZARD NAVIGATION ──
+function goToStep(n) {
+  document.querySelectorAll('.wizard-step').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('wizard-' + n).classList.add('active');
+  // update dots
+  [1,2,3].forEach(function(i){
+    var dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active','done');
+    if (i < n) dot.classList.add('done');
+    else if (i === n) dot.classList.add('active');
+  });
+  var labels = ['Step 1 of 3 — Type of clean','Step 2 of 3 — Your property','Step 3 of 3 — Choose services'];
+  document.getElementById('step-label').textContent = labels[n-1];
+  document.getElementById('book').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function goToStep2() {
+  if (!selectedSvcTypes.length) { alert('Please select at least one type of clean.'); return; }
+  goToStep(2);
+}
+
+function goToStep3() {
+  if (!introPropType) { alert('Please select your property type.'); return; }
+  if (introPropType === 'House' && !introFloors) { alert('Please select how many floors.'); return; }
+  // update summary bar
+  document.getElementById('ps-type').textContent = introPropType;
+  var flEl = document.getElementById('ps-floors');
+  if (introFloors) { flEl.textContent = introFloors + ' floor' + (introFloors==='1'?'':'s'); flEl.style.display=''; }
+  document.getElementById('ps-clean-type').textContent = selectedSvcTypes.join(', ');
+  goToStep(3);
+}
+
+// ── CLEAN TYPE SELECTION ──
+document.getElementById('svc-type-grid').addEventListener('click', function(e) {
+  var btn = e.target.closest('.svc-type-btn'); if (!btn) return;
+  var val = btn.dataset.val;
+  if (btn.classList.contains('active')) {
+    btn.classList.remove('active');
+    selectedSvcTypes = selectedSvcTypes.filter(function(v){ return v !== val; });
+  } else {
+    btn.classList.add('active');
+    selectedSvcTypes.push(val);
+  }
+});
+
+// ── PROPERTY TYPE ──
+document.getElementById('prop-type-grid').addEventListener('click', function(e) {
+  var btn = e.target.closest('.opt-btn'); if (!btn) return;
+  document.querySelectorAll('#prop-type-grid .opt-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active'); introPropType = btn.dataset.val;
+  document.getElementById('floors-section').style.display = introPropType === 'House' ? 'block' : 'none';
+  if (introPropType !== 'House') introFloors = '';
+});
+document.getElementById('floors-grid').addEventListener('click', function(e) {
+  var btn = e.target.closest('.opt-btn'); if (!btn) return;
+  document.querySelectorAll('#floors-grid .opt-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active'); introFloors = btn.dataset.val;
+});
+
+// ── TOGGLE INFO ──
+function toggleInfo(id, btn) {
+  var el = document.getElementById(id);
+  var isOpen = el.classList.contains('open');
+  el.classList.toggle('open', !isOpen);
+  btn.textContent = isOpen ? '👁 Click to see all info' : '🔼 Hide info';
+}
+
+// ── WINDOW PRICE ──
+function windowPriceForBedrooms(qty) {
+  if (qty <= 0) return 0;
+  if (qty === 1) return 15;
+  return qty * 12;
+}
+
+// ── QUICK ADD ──
+function quickAdd(type) {
+  var qEl = document.getElementById('qty-' + type);
+  var qty = qEl ? (parseInt(qEl.value) || 1) : 1;
+  var unitPrice = PRICES[type];
+  var price = unitPrice * qty;
+  var label = LABELS[type] + (qty > 1 ? ' x' + qty : '');
+  var detail = '';
+  if (['bathroom','living','carpet','conservatory','utility'].includes(type) && qty > 1) detail = qty + ' × £' + unitPrice + ' each';
+  if (type === 'dining' && qty > 1) detail = qty + ' rooms × £' + unitPrice + ' each';
+
+  if (type === 'bedroom') {
+    cart = cart.filter(function(i) { return i.tab !== 'bedroom' && i.tab !== 'windows'; });
+    var winPrice = windowPriceForBedrooms(qty);
+    detail = qty + ' bedroom' + (qty > 1 ? 's' : '') + ' — window cleaning included';
+    cart.push({id: Date.now(), tab: 'bedroom', label: label, price: price, detail: detail});
+    cart.push({id: Date.now() + 1, tab: 'windows', label: 'Window Cleaning — all house windows', price: winPrice, detail: 'All house windows cleaned · £' + winPrice + ' for ' + qty + ' bedroom' + (qty>1?'s':'')});
+    renderCart(); flashBtn(type); showToast();
+  } else if (type === 'windows') {
+    if (cart.some(function(i){return i.tab==='bedroom';})) { alert('Window cleaning is already included based on your bedroom count.'); return; }
+    addToCart({id: Date.now(), tab: type, label: label, price: price, detail: detail});
+  } else {
+    addToCart({id: Date.now(), tab: type, label: label, price: price, detail: detail});
+  }
+  if (qEl) qEl.value = 1;
+  if (type !== 'bedroom') flashBtn(type);
+}
+
+function setAddedState(type, added) {
+  document.querySelectorAll('.tile-add').forEach(function(b) {
+    var oc = b.getAttribute('onclick') || '';
+    if (oc.includes("quickAdd('" + type + "')") || (type==='kitchen' && oc.includes('openKitchenModal'))) {
+      if (added) { b.textContent='✓ Added'; b.classList.add('added'); b.style.background='var(--mint-mid)'; b.style.color='var(--green-deep)'; }
+      else { b.textContent='+ Add'; b.classList.remove('added'); b.style.background=''; b.style.color=''; }
+    }
+  });
+}
+function syncButtonStates() {
+  ['bedroom','bathroom','living','dining','conservatory','utility','windows','carpet','kitchen','sofa','furniture'].forEach(function(type) {
+    setAddedState(type, cart.some(function(i){return i.tab===type;}));
+  });
+}
+function showToast() {
+  var t = document.getElementById('toast'); t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2000);
+}
+function flashBtn(type) { setAddedState(type, true); if(type==='bedroom') setAddedState('windows',true); showToast(); }
+
+// ── SERVICE MODAL ──
+var SVC_DATA = {
+  bedroom: { icon:'🛏️', title:'Bedroom Cleaning', price:25, unit:'per bedroom', qtyLabel:'How many bedrooms?', includes:['All tops and surfaces dusted and thoroughly wiped','Skirting boards and radiators cleaned and wiped down','Light switches and plug sockets cleaned and wiped','Floors hoovered or mopped to a spotless finish'], note:'Walls and ceilings will be dusted only.' },
+  bathroom: { icon:'🛁', title:'Bathroom & Toilet', price:50, unit:'per bathroom', qtyLabel:'How many bathrooms?', includes:['Toilet seat and bowl disinfected inside and out','Bath or shower cabin cleaned and washed','Tiles and grout cleaned, limescale removed','Mirrors and glass polished streak-free','Sink washed and sanitised','Floor hoovered and mopped'], note:'Walls and ceilings will be dusted only.' },
+  living: { icon:'🛋️', title:'Living Area / Hallway', price:45, unit:'per area', qtyLabel:'How many areas?', includes:['Doors and door frames cleaned and wiped down','Skirting boards cleaned and wiped','Banisters and radiators cleaned and wiped','Light switches wiped, fingerprints removed','Floors hoovered and mopped'], note:'Walls and ceilings will be dusted only.' },
+  dining: { icon:'🍽️', title:'Dining Room', price:25, unit:'per room', qtyLabel:'How many rooms?', includes:['Comprehensive deep clean of all areas','All surfaces thoroughly dusted and sanitised','Floors vacuumed or mopped','All furniture and fittings wiped clean'], note:'Walls and ceilings will be dusted only.' },
+  conservatory: { icon:'🌿', title:'Conservatory', price:40, unit:'per conservatory', qtyLabel:'How many conservatories?', includes:['All surfaces vacuumed, dusted and deep cleaned','Floors, doors and door frames cleaned','Lamp shades dusted','Fireplace, radiators, mirrors and glass cleaned','Left completely spotless, top to bottom'], note:'' },
+  utility: { icon:'🔧', title:'Utility Room', price:15, unit:'per utility room', qtyLabel:'How many utility rooms?', includes:['All surfaces vacuumed, dusted and deep cleaned','Floors, doors, door frames and skirting boards cleaned','Lamp shades dusted','Light switches wiped clean'], note:'Walls and ceilings will be dusted only.' },
+  windows: { icon:'🪟', title:'Window Cleaning', price:0, unit:'', qtyLabel:'How many windows?', includes:['All interior windows cleaned','Window frames (inside) cleaned and wiped','Window sills cleaned and wiped down'], note:'Automatically included with bedroom cleaning. Blinds not included. 1 bedroom=£15, 2+=qty×£12' },
+  carpet: { icon:'🧹', title:'Deep Carpet Clean', price:20, unit:'per area', qtyLabel:'How many areas?', includes:['Deep carpet clean per area','Hoovering / vacuuming pre-included','Carpet cleaning using steam / water extractor machine'], note:'We cannot guarantee all marks/stains will be completely removed.' },
+  sofa: { icon:'🛋️', title:'Sofa Cleaning', price:10, unit:'per sofa', qtyLabel:'How many sofas?', includes:['Cleaned using steam cleaner or water extractor machine','Full vacuuming of all sofa surfaces and cushions','Stains treated with specialist products','Dirt and grime extracted deep from the fabric','Proper drying ensured after cleaning'], note:'Leaves your sofa fresh, sanitised and revived.' },
+};
+var currentSvcType = '';
+var svcModalQtyVal = 1;
+
+function openServiceModal(type) {
+  currentSvcType = type;
+  svcModalQtyVal = 1;
+  var d = SVC_DATA[type];
+  document.getElementById('svc-modal-title').textContent = d.icon + ' ' + d.title;
+  document.getElementById('svc-modal-price').textContent = d.price > 0 ? '£' + d.price + ' ' + d.unit : 'Price based on bedrooms';
+  var inc = '<div style="font-size:0.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem">What\'s included</div><ul style="list-style:none;padding:0">' + d.includes.map(function(i){ return '<li style="font-size:0.85rem;padding:0.2rem 0 0.2rem 1.1rem;position:relative"><span style="position:absolute;left:0;color:var(--mint-mid);font-weight:700">✓</span>' + i + '</li>'; }).join('') + '</ul>' + (d.note ? '<div style="font-size:0.78rem;color:var(--muted);font-style:italic;margin-top:0.5rem;border-top:1px dashed var(--border);padding-top:0.4rem">' + d.note + '</div>' : '');
+  document.getElementById('svc-modal-includes').innerHTML = inc;
+  document.getElementById('svc-modal-qty-label').textContent = d.qtyLabel;
+  document.getElementById('svc-modal-qty-num').textContent = 1;
+  document.getElementById('svc-modal-unit-price').textContent = d.price > 0 ? '× £' + d.price + ' each' : '';
+  document.getElementById('svc-modal-total').textContent = d.price > 0 ? d.price : '—';
+  document.getElementById('service-modal').classList.add('open');
+}
+function closeServiceModal() { document.getElementById('service-modal').classList.remove('open'); }
+function svcModalQty(delta) {
+  svcModalQtyVal = Math.max(1, svcModalQtyVal + delta);
+  document.getElementById('svc-modal-qty-num').textContent = svcModalQtyVal;
+  var d = SVC_DATA[currentSvcType];
+  document.getElementById('svc-modal-total').textContent = d.price > 0 ? d.price * svcModalQtyVal : '—';
+}
+function confirmServiceModal() {
+  var d = SVC_DATA[currentSvcType];
+  var qty = svcModalQtyVal;
+  if (currentSvcType === 'bedroom') {
+    cart = cart.filter(function(i){return i.tab!=='bedroom'&&i.tab!=='windows';});
+    var winPrice = windowPriceForBedrooms(qty);
+    cart.push({id:Date.now(),tab:'bedroom',label:'Bedroom'+(qty>1?' x'+qty:''),price:25*qty,detail:qty+' bedroom'+(qty>1?'s':'')+' — window cleaning included'});
+    cart.push({id:Date.now()+1,tab:'windows',label:'Window Cleaning — all house windows',price:winPrice,detail:'All house windows · £'+winPrice+' for '+qty+' bedroom'+(qty>1?'s':'')});
+    renderCart(); setAddedState('bedroom',true); setAddedState('windows',true); showToast();
+  } else if (currentSvcType === 'windows') {
+    if (cart.some(function(i){return i.tab==='bedroom';})) { alert('Window cleaning is already included with your bedrooms.'); closeServiceModal(); return; }
+    var winPrice = windowPriceForBedrooms(qty);
+    addToCart({id:Date.now(),tab:'windows',label:'Window Cleaning',price:winPrice,detail:qty+' windows'});
+    setAddedState('windows',true);
+  } else {
+    addToCart({id:Date.now(),tab:currentSvcType,label:d.title+(qty>1?' x'+qty:''),price:d.price*qty,detail:qty>1?qty+' × £'+d.price+' each':''});
+    setAddedState(currentSvcType,true);
+  }
+  showToast();
+  closeServiceModal();
+}
+
+// ── FURNITURE MODAL ──
+function openFurnitureModal() { document.getElementById('furniture-modal').classList.add('open'); }
+function closeFurnitureModal() { document.getElementById('furniture-modal').classList.remove('open'); }
+
+// ── FURNITURE ──
+var FURN_PRICES = {'single-sofa':5,'double-sofa':10,'blinds':5,'tv-stand':5,'chair':2,'footstool':2,'bookshelf':4,'other':4};
+var FURN_NAMES = {'single-sofa':'Single Sofa','double-sofa':'Double/Triple Sofa','blinds':'Blinds','tv-stand':'TV Table/Stand','chair':'Chair','footstool':'Footstool','bookshelf':'Bookshelf','other':'Other Furniture'};
+var furnQtys = {'single-sofa':0,'double-sofa':0,'blinds':0,'tv-stand':0,'chair':0,'footstool':0,'bookshelf':0,'other':0};
+
+function furnQty(id, delta) {
+  furnQtys[id] = Math.max(0, (furnQtys[id] || 0) + delta);
+  document.getElementById('furn-num-' + id).textContent = furnQtys[id];
+  var total = Object.keys(furnQtys).reduce(function(s,k){ return s + furnQtys[k] * FURN_PRICES[k]; }, 0);
+  document.getElementById('furn-total').textContent = total;
+}
+
+function addFurnitureToCart() {
+  var lines = []; var total = 0;
+  Object.keys(furnQtys).forEach(function(id) {
+    if (furnQtys[id] > 0) {
+      var cost = furnQtys[id] * FURN_PRICES[id];
+      total += cost;
+      var name = FURN_NAMES[id];
+      if (id === 'other') {
+        var desc = document.getElementById('furn-other-desc').value;
+        name = desc ? 'Other (' + desc + ')' : 'Other Furniture';
+      }
+      lines.push(name + ' x' + furnQtys[id] + ' (£' + cost + ')');
+    }
+  });
+  if (!lines.length) { alert('Please select at least one furniture item.'); return; }
+  addToCart({id: Date.now(), tab: 'furniture', label: 'Furniture Cleaning', price: total, detail: lines.join(', ')});
+  Object.keys(furnQtys).forEach(function(id) { furnQtys[id] = 0; document.getElementById('furn-num-' + id).textContent = '0'; });
+  document.getElementById('furn-total').textContent = '0';
+  document.getElementById('furn-other-desc').value = '';
+  closeFurnitureModal();
+  flashBtn('furniture');
+}
+
+// ── KITCHEN ──
+function openKitchenModal() { document.getElementById('kitchen-modal').classList.add('open'); updateKitchenPreview(); }
+function closeKitchenModal() { document.getElementById('kitchen-modal').classList.remove('open'); }
+document.querySelectorAll('.appl-item').forEach(function(item) {
+  item.addEventListener('click', function(e) {
+    var cb = item.querySelector('input[type="checkbox"]');
+    if (e.target !== cb) { cb.checked = !cb.checked; }
+    item.classList.toggle('sel', cb.checked); updateKitchenPreview();
+  });
+});
+document.querySelectorAll('.appl-item input[type="number"]').forEach(function(inp){inp.addEventListener('input',updateKitchenPreview);});
+document.getElementById('qty-kitchen').addEventListener('input', updateKitchenPreview);
+function updateKitchenPreview() {
+  var kq = parseInt(document.getElementById('qty-kitchen').value)||1;
+  var total = 55*kq;
+  Object.keys(KITCHEN_APPL).forEach(function(id){
+    var cb=document.getElementById('cb-'+id), qi=document.getElementById('qty-'+id);
+    if(cb&&cb.checked) total+=KITCHEN_APPL[id]*((parseInt(qi?qi.value:1))||1);
+  });
+  document.getElementById('kitchen-price-preview').textContent=total;
+}
+function addKitchenToCart() {
+  var kq=parseInt(document.getElementById('qty-kitchen').value)||1;
+  var price=55*kq; var applLines=[];
+  Object.keys(KITCHEN_APPL).forEach(function(id){
+    var cb=document.getElementById('cb-'+id),qi=document.getElementById('qty-'+id);
+    if(cb&&cb.checked){var q=parseInt(qi?qi.value:1)||1;price+=KITCHEN_APPL[id]*q;applLines.push(id.replace('-',' ')+(q>1?' x'+q:''));}
+  });
+  var label='Kitchen Deep Clean'+(kq>1?' x'+kq:'');
+  var detail=(kq>1?kq+' kitchens (£55 each) ':'Base clean')+(applLines.length?' + '+applLines.join(', '):'');
+  addToCart({id:Date.now(),tab:'kitchen',label:label,price:price,detail:detail});
+  document.querySelectorAll('.appl-item').forEach(function(item){
+    var cb=item.querySelector('input[type="checkbox"]');if(cb)cb.checked=false;
+    item.classList.remove('sel');var qi=item.querySelector('input[type="number"]');if(qi)qi.value=1;
+  });
+  updateKitchenPreview(); closeKitchenModal(); flashBtn('kitchen');
+}
+
+// ── CART ──
+function addToCart(item) { if(!item.tab)item.tab=''; cart.push(item); renderCart(); }
+function removeFromCart(id) {
+  var r=cart.find(function(i){return i.id===id;});
+  cart=cart.filter(function(i){return i.id!==id;});
+  if(r&&r.tab==='bedroom') cart=cart.filter(function(i){return i.tab!=='windows';});
+  renderCart();
+}
+function renderCart() {
+  var body=document.getElementById('cart-body');
+  if(!cart.length){
+    body.innerHTML='<div class="cart-empty">Your cart is empty.<br/>Add a service to get started.</div>';
+    document.getElementById('cart-total').textContent='£0';
+    document.getElementById('checkout-btn').disabled=true;
+    document.getElementById('cart-badge').style.display='none';
+    syncButtonStates(); return;
+  }
+  body.innerHTML='';
+  cart.forEach(function(item){
+    var row=document.createElement('div');row.className='cart-item';
+    row.innerHTML='<div><div class="ci-name">'+item.label+'</div>'+(item.detail?'<div class="ci-detail">'+item.detail+'</div>':'')+'</div>'+
+      '<div class="ci-right"><span class="ci-price">'+(item.price>0?'£'+item.price:'Quote')+'</span>'+
+      '<button class="ci-remove" onclick="removeFromCart('+item.id+')">✕</button></div>';
+    body.appendChild(row);
+  });
+  var rawTotal=cart.reduce(function(s,i){return s+i.price;},0);
+  var total=Math.max(rawTotal,180);
+  document.getElementById('cart-total').textContent=total>0?'£'+total:'Quote';
+  var minNote=document.getElementById('min-price-note');
+  if(rawTotal<180&&rawTotal>0){
+    if(!minNote){minNote=document.createElement('div');minNote.id='min-price-note';minNote.style.cssText='font-size:0.78rem;color:var(--muted);margin-top:0.4rem;text-align:center';minNote.textContent='Minimum booking price is £180';document.getElementById('cart-total').parentNode.appendChild(minNote);}
+  } else { if(minNote)minNote.remove(); }
+  document.getElementById('checkout-btn').disabled=false;
+  var badge=document.getElementById('cart-badge');badge.textContent=cart.length;badge.style.display='inline';
+  syncButtonStates();
+}
+function openCart(){document.getElementById('cart-drawer').classList.add('open');}
+function closeCart(){document.getElementById('cart-drawer').classList.remove('open');}
+
+// ── CHECKOUT ──
+function openCheckout(){
+  closeCart();
+  var rawTotal=cart.reduce(function(s,i){return s+i.price;},0);
+  var total=Math.max(rawTotal,180);
+  var summary=document.getElementById('co-summary');
+  summary.innerHTML=cart.map(function(i){
+    return '<div class="co-summary-row"><span>'+i.label+(i.detail?' <span style="font-size:0.75rem;color:var(--muted)">— '+i.detail+'</span>':'')+'</span><span>'+(i.price>0?'£'+i.price:'Quote')+'</span></div>';
+  }).join('')+(rawTotal<180?'<div class="co-summary-row" style="font-size:0.82rem;color:var(--muted)"><span>Minimum booking applies</span><span></span></div>':'')+
+  '<div class="co-summary-row total"><span>Total</span><span>'+(total>0?'£'+total:'Quote')+'</span></div>';
+  document.getElementById('checkout-modal').classList.add('open');
+}
+function closeCheckout(){document.getElementById('checkout-modal').classList.remove('open');}
+
+// ── PAYMENT ──
+function selectPayment(btn){
+  document.querySelectorAll('.pay-opt').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');selectedPayment=btn.dataset.val;
+  var note=document.getElementById('pay-note');note.style.display='block';
+  var confirmBtn=document.getElementById('confirm-btn');
+  if(selectedPayment==='Cash'){note.textContent='💵 Please have the exact amount ready on the day.';confirmBtn.textContent='Confirm & Pick a Date →';}
+  else if(selectedPayment==='Card'){note.textContent='💳 Our cleaner will bring a card reader on the day.';confirmBtn.textContent='Confirm & Pick a Date →';}
+  else if(selectedPayment==='Online'){note.textContent='🌐 You will be taken to a secure Stripe payment page after confirming.';confirmBtn.textContent='Confirm & Pay Online →';}
+}
+
+// ── SUBMIT ──
+function submitBooking(){
+  var name=document.getElementById('cust-name').value;
+  var phone=document.getElementById('cust-phone').value;
+  var email=document.getElementById('cust-email').value;
+  var house=document.getElementById('cust-house').value;
+  var address=document.getElementById('cust-address').value;
+  var postcode=document.getElementById('cust-postcode').value;
+  if(!name||!phone||!email||!house||!address||!postcode){alert('Please fill in all your details.');return;}
+  if(!cart.length){alert('Your cart is empty.');return;}
+  var rawTotal=cart.reduce(function(s,i){return s+i.price;},0);
+  var total=Math.max(rawTotal,180);
+  var services=cart.map(function(i,idx){return (idx+1)+'. '+i.label+(i.price>0?' — £'+i.price:' — Quote')+(i.detail?' ('+i.detail+')':'');}).join(' | ');
+  var btn=document.querySelector('.co-confirm-btn');
+  btn.textContent='Sending…';btn.disabled=true;
+  fetch('https://formspree.io/f/mzdweeog',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({
+      _subject:'New Booking — Leicestershire Cleaning Group',
+      Name:name,Phone:phone,Email:email,
+      Address:house+' '+address+', '+postcode,
+      Property_Type:introPropType+(introFloors?', '+introFloors+' floor(s)':''),
+      Clean_Type:selectedSvcTypes.join(', ')||'Not specified',
+      Services:services,
+      Total:total>0?'£'+total:'Quote',
+      Date_and_Time:'Booked via Calendly',
+      Payment:selectedPayment||'Not specified',
+    })
+  }).then(function(res){
+    if(res.ok){
+      btn.textContent='✓ Sent!';btn.style.background='var(--mint-mid)';btn.style.color='var(--green-deep)';
+      setTimeout(function(){
+        closeCheckout();
+        document.getElementById('wizard-3').style.display='none';
+        document.getElementById('step-indicator').style.display='none';
+        document.getElementById('step-label').style.display='none';
+        document.getElementById('success-box').style.display='block';
+        if(selectedPayment==='Online'){window.open('https://buy.stripe.com/cNi4gy211elM2eV7Rq6g800?prefilled_amount='+(total*100),'_blank');}
+        else{window.open('https://calendly.com/aaaplb7/new-meeting','_blank');}
+        btn.textContent='Confirm & Pick a Date →';btn.style.background='';btn.style.color='';btn.disabled=false;
+      },2000);
+    } else {
+      btn.textContent='Confirm & Pick a Date →';btn.disabled=false;btn.style.background='';btn.style.color='';
+      alert('Something went wrong. Please try again or call us directly.');
+    }
+  }).catch(function(){
+    btn.textContent='Confirm & Pick a Date →';btn.disabled=false;btn.style.background='';btn.style.color='';
+    alert('Something went wrong. Please try again or call us directly.');
+  });
+}
+</script>
+</body>
+</html>
