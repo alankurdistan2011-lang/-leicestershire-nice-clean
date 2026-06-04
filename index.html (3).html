@@ -7,8 +7,6 @@
 <meta name="google-site-verification" content="PffL3O4Z_m3vjfCkewZIk37HQtWByzmuW667DKMgwG0" />
 <script src="https://js.stripe.com/v3/"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet"/>
-<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -21,8 +19,6 @@
   --body:'DM Sans',sans-serif;
 }
 body{font-family:var(--body);background:var(--cream);color:var(--text);line-height:1.6;overflow-x:hidden}
-
-/* NAV */
 nav{position:sticky;top:0;z-index:200;background:rgba(250,249,246,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between}
 .nav-logo{font-family:var(--display);font-size:1.4rem;color:var(--green)}
 .nav-logo span{color:var(--mint-mid)}
@@ -30,8 +26,6 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,246,0.95);backdrop
 .cart-nav-btn{background:var(--green);color:#fff;border:none;padding:0.5rem 1.1rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:0.5rem;transition:background 0.2s}
 .cart-nav-btn:hover{background:var(--green-deep)}
 .cart-badge{background:var(--mint-mid);color:var(--green-deep);border-radius:100px;padding:0.05rem 0.45rem;font-size:0.75rem;font-weight:700;display:none}
-
-/* HERO */
 .hero{min-height:88vh;background:linear-gradient(135deg,var(--green-deep) 0%,var(--green) 55%,#2a7a52 100%);display:flex;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(116,201,160,0.15) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(212,240,228,0.1) 0%,transparent 40%)}
 .hero-content{position:relative;max-width:680px}
@@ -41,40 +35,60 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,249,246,0.95);backdrop
 .hero p{font-size:1.1rem;color:rgba(255,255,255,0.75);max-width:440px;margin:0 auto 2.5rem}
 .hero-btn{background:var(--mint-mid);color:var(--green-deep);padding:1rem 2.5rem;border-radius:100px;font-size:1rem;font-weight:500;text-decoration:none;display:inline-block;transition:transform 0.2s,background 0.2s}
 .hero-btn:hover{background:var(--mint);transform:translateY(-2px)}
-
-/* BOOKING SECTION */
 .book-section{max-width:1100px;margin:0 auto;padding:4rem 2rem 6rem}
 .book-section>h2{font-family:var(--display);font-size:clamp(1.8rem,3vw,2.4rem);text-align:center;margin-bottom:0.4rem}
 .book-section>.sub{text-align:center;color:var(--muted);margin-bottom:3rem}
 
-/* PROPERTY STEP */
+/* WIZARD STEPS */
+.wizard-step{display:none}
+.wizard-step.active{display:block}
 .step-card{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:2rem;margin-bottom:2rem;box-shadow:0 2px 20px rgba(0,0,0,0.04)}
 .step-card h3{font-family:var(--display);font-size:1.25rem;color:var(--green);margin-bottom:0.3rem}
 .step-card>.sub{font-size:0.9rem;color:var(--muted);margin-bottom:1.5rem}
+
+/* STEP INDICATOR */
+.step-indicator{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:2rem}
+.step-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background 0.2s}
+.step-dot.active{background:var(--green);transform:scale(1.2)}
+.step-dot.done{background:var(--mint-mid)}
+.step-label{font-size:0.8rem;color:var(--muted);text-align:center;margin-bottom:1.5rem}
+
 .opt-grid{display:grid;gap:0.6rem;margin-bottom:1.25rem}
 .opt-grid.cols3{grid-template-columns:repeat(3,1fr)}
 .opt-grid.cols4{grid-template-columns:repeat(4,1fr)}
-.opt-grid.cols2{grid-template-columns:repeat(2,1fr)}
 @media(max-width:540px){.opt-grid.cols3,.opt-grid.cols4{grid-template-columns:repeat(2,1fr)}}
 .opt-btn{padding:0.75rem 0.5rem;border:1.5px solid var(--border);border-radius:10px;background:var(--cream);color:var(--muted);font-family:var(--body);font-size:0.85rem;font-weight:500;cursor:pointer;transition:all 0.18s;text-align:center;line-height:1.4}
 .opt-btn .e{display:block;font-size:1.5rem;margin-bottom:0.25rem}
 .opt-btn:hover{border-color:var(--mint-mid);color:var(--green);background:rgba(116,201,160,0.08)}
 .opt-btn.active{border-color:var(--green);background:rgba(26,92,58,0.07);color:var(--green);box-shadow:0 0 0 3px rgba(26,92,58,0.08)}
+
+.svc-type-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;margin-bottom:1.5rem}
+.svc-type-btn{padding:0.9rem;border:1.5px solid var(--border);border-radius:10px;background:var(--cream);text-align:left;cursor:pointer;transition:all 0.18s;font-family:var(--body)}
+.svc-type-btn:hover{border-color:var(--mint-mid);background:rgba(116,201,160,0.08)}
+.svc-type-btn.active{border-color:var(--green);background:rgba(26,92,58,0.07);box-shadow:0 0 0 3px rgba(26,92,58,0.08)}
+.svc-type-emoji{font-size:1.4rem;display:block;margin-bottom:0.3rem}
+.svc-type-name{font-size:0.88rem;font-weight:600;color:var(--green);margin-bottom:0.25rem}
+.svc-type-desc{font-size:0.75rem;color:var(--muted);line-height:1.4}
+
 .field-label{display:block;font-size:0.82rem;font-weight:500;color:var(--muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.5px}
-input[type="number"],input[type="text"],input[type="email"],input[type="tel"],textarea,select{width:100%;padding:0.7rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-family:var(--body);font-size:0.95rem;background:var(--cream);color:var(--text);transition:border-color 0.2s;margin-bottom:1.25rem}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--mint-mid)}
+input[type="number"],input[type="text"],input[type="email"],input[type="tel"],textarea{width:100%;padding:0.7rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-family:var(--body);font-size:0.95rem;background:var(--cream);color:var(--text);transition:border-color 0.2s;margin-bottom:1.25rem}
+input:focus,textarea:focus{outline:none;border-color:var(--mint-mid)}
 textarea{resize:vertical;min-height:75px}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 @media(max-width:520px){.field-row{grid-template-columns:1fr}}
-.continue-btn{width:100%;padding:0.9rem;background:var(--green);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-size:1rem;font-weight:500;cursor:pointer;transition:background 0.2s}
+
+/* NAV BUTTONS */
+.btn-row{display:flex;gap:0.75rem;margin-top:0.5rem}
+.continue-btn{flex:1;padding:0.9rem;background:var(--green);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-size:1rem;font-weight:500;cursor:pointer;transition:background 0.2s}
 .continue-btn:hover{background:var(--green-deep)}
+.back-btn{padding:0.9rem 1.5rem;background:var(--warm);color:var(--muted);border:1.5px solid var(--border);border-radius:12px;font-family:var(--body);font-size:1rem;cursor:pointer;transition:all 0.2s}
+.back-btn:hover{border-color:var(--muted);color:var(--text)}
 
 /* SERVICE TILES */
 #services-step{display:none}
 .prop-summary{background:var(--warm);border-radius:10px;padding:0.7rem 1rem;margin-bottom:1.75rem;font-size:0.88rem;color:var(--green);font-weight:500;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;border:1px solid var(--border)}
 .prop-summary span{background:var(--mint);border-radius:100px;padding:0.15rem 0.65rem;font-size:0.78rem}
 .prop-summary button{margin-left:auto;background:none;border:none;color:var(--muted);font-size:0.8rem;cursor:pointer;text-decoration:underline;font-family:var(--body)}
-
 .tiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:0.85rem;margin-bottom:2rem;align-items:start}
 @media(max-width:480px){.tiles-grid{grid-template-columns:1fr 1fr}}
 .tile{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:1rem;display:flex;flex-direction:column;transition:box-shadow 0.2s,transform 0.2s}
@@ -85,15 +99,22 @@ textarea{resize:vertical;min-height:75px}
 .tile-add{width:100%;padding:0.55rem;background:var(--green);color:#fff;border:none;border-radius:8px;font-family:var(--body);font-size:0.88rem;font-weight:500;cursor:pointer;transition:background 0.18s;margin-top:auto}
 .tile-add:hover{background:var(--green-deep)}
 .tile-add.added{background:var(--mint-mid);color:var(--green-deep)}
+.tile-info-toggle{font-size:0.73rem;color:var(--mint-mid);cursor:pointer;background:none;border:none;font-family:var(--body);padding:0;margin-bottom:0.5rem;text-decoration:underline;text-underline-offset:2px}
+.tile-details{display:none;font-size:0.77rem;color:var(--muted);line-height:1.45;margin-bottom:0.6rem;background:var(--warm);border-radius:7px;padding:0.55rem 0.7rem}
+.tile-details.open{display:block}
+.tile-details ul{list-style:none;padding:0}
+.tile-details ul li{padding:0.15rem 0 0.15rem 1rem;position:relative}
+.tile-details ul li::before{content:'✓';position:absolute;left:0;color:var(--mint-mid);font-weight:700;font-size:0.75rem;top:0.22rem}
+.tile-details .d-note{font-style:italic;font-size:0.75rem;margin-top:0.4rem;border-top:1px dashed var(--border);padding-top:0.4rem}
+.qty-label{font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;margin-top:0.6rem;font-weight:500;text-transform:uppercase;letter-spacing:0.4px}
 
-/* KITCHEN MODAL */
+/* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:300;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
 .modal{background:#fff;border-radius:var(--r);padding:2rem;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
 .modal h3{font-family:var(--display);font-size:1.3rem;color:var(--green);margin-bottom:0.3rem}
 .modal>.sub{font-size:0.88rem;color:var(--muted);margin-bottom:1.25rem}
 .appl-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.25rem}
-@media(max-width:400px){.appl-grid{grid-template-columns:1fr}}
 .appl-item{background:var(--warm);border-radius:10px;padding:0.75rem 0.9rem;border:1.5px solid transparent;cursor:pointer;transition:all 0.18s}
 .appl-item.sel{border-color:var(--mint-mid);background:rgba(116,201,160,0.1)}
 .appl-item label{display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;font-weight:500;cursor:pointer}
@@ -102,18 +123,17 @@ textarea{resize:vertical;min-height:75px}
 .appl-item.sel .qrow{display:flex}
 .appl-item .qrow input{width:52px;padding:0.25rem 0.4rem;font-size:0.82rem;margin:0;border-radius:6px}
 .modal-btns{display:flex;gap:0.75rem;margin-top:0.5rem}
-.modal-cancel{flex:1;padding:0.75rem;background:var(--warm);color:var(--muted);border:1.5px solid var(--border);border-radius:10px;font-family:var(--body);font-size:0.9rem;cursor:pointer;transition:all 0.18s}
-.modal-cancel:hover{border-color:var(--muted)}
-.modal-confirm{flex:2;padding:0.75rem;background:var(--green);color:#fff;border:none;border-radius:10px;font-family:var(--body);font-size:0.9rem;font-weight:500;cursor:pointer;transition:background 0.18s}
+.modal-cancel{flex:1;padding:0.75rem;background:var(--warm);color:var(--muted);border:1.5px solid var(--border);border-radius:10px;font-family:var(--body);font-size:0.9rem;cursor:pointer}
+.modal-confirm{flex:2;padding:0.75rem;background:var(--green);color:#fff;border:none;border-radius:10px;font-family:var(--body);font-size:0.9rem;font-weight:500;cursor:pointer}
 .modal-confirm:hover{background:var(--green-deep)}
 
-/* CART DRAWER */
+/* CART */
 .cart-drawer{position:fixed;right:0;top:0;bottom:0;width:360px;background:#fff;box-shadow:-4px 0 40px rgba(0,0,0,0.12);z-index:250;transform:translateX(100%);transition:transform 0.3s ease;display:flex;flex-direction:column}
 .cart-drawer.open{transform:translateX(0)}
 @media(max-width:420px){.cart-drawer{width:100%}}
 .cart-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .cart-header h3{font-family:var(--display);font-size:1.2rem;color:var(--green)}
-.cart-close{background:none;border:none;font-size:1.4rem;color:var(--muted);cursor:pointer;line-height:1}
+.cart-close{background:none;border:none;font-size:1.4rem;color:var(--muted);cursor:pointer}
 .cart-body{flex:1;overflow-y:auto;padding:1rem 1.5rem}
 .cart-empty{text-align:center;color:var(--muted);font-size:0.9rem;padding:2rem 0}
 .cart-item{display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem;padding:0.85rem 0;border-bottom:1px solid var(--border)}
@@ -122,7 +142,7 @@ textarea{resize:vertical;min-height:75px}
 .ci-detail{font-size:0.78rem;color:var(--muted);margin-top:0.1rem}
 .ci-right{display:flex;align-items:center;gap:0.5rem;flex-shrink:0}
 .ci-price{font-weight:600;color:var(--green);font-size:0.92rem}
-.ci-remove{background:none;border:none;color:#ccc;font-size:0.95rem;cursor:pointer;padding:0.1rem 0.25rem;border-radius:4px;transition:color 0.15s}
+.ci-remove{background:none;border:none;color:#ccc;font-size:0.95rem;cursor:pointer;padding:0.1rem 0.25rem;border-radius:4px}
 .ci-remove:hover{color:#e55}
 .cart-footer{padding:1.25rem 1.5rem;border-top:1px solid var(--border)}
 .cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
@@ -132,7 +152,7 @@ textarea{resize:vertical;min-height:75px}
 .checkout-btn:hover{background:var(--green-deep)}
 .checkout-btn:disabled{background:#ccc;cursor:default}
 
-/* CHECKOUT MODAL */
+/* CHECKOUT */
 .checkout-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:400;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
 .checkout-modal.open{display:flex}
 .co-box{background:#fff;border-radius:var(--r);padding:2rem;max-width:520px;width:100%;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
@@ -140,8 +160,7 @@ textarea{resize:vertical;min-height:75px}
 .co-section{margin-bottom:1.5rem}
 .co-section-title{font-size:0.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:0.75rem}
 .divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
-/* payment options */
-.pay-opts{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0}
+.pay-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:0}
 .pay-opt{padding:0.85rem;border:1.5px solid var(--border);border-radius:10px;background:var(--cream);text-align:center;cursor:pointer;transition:all 0.18s;font-family:var(--body)}
 .pay-opt .pe{display:block;font-size:1.5rem;margin-bottom:0.25rem}
 .pay-opt .pt{font-size:0.85rem;font-weight:500;color:var(--muted)}
@@ -150,54 +169,24 @@ textarea{resize:vertical;min-height:75px}
 .pay-opt.active{border-color:var(--green);background:rgba(26,92,58,0.07);box-shadow:0 0 0 3px rgba(26,92,58,0.08)}
 .pay-opt.active .pt,.pay-opt.active .ps{color:var(--green)}
 .pay-note{background:rgba(116,201,160,0.12);border:1px solid rgba(116,201,160,0.4);border-radius:10px;padding:0.75rem 1rem;font-size:0.85rem;color:var(--green);margin-top:0.75rem;display:none}
-/* order summary in checkout */
 .co-summary{background:var(--warm);border-radius:10px;padding:1rem;margin-bottom:1.25rem}
 .co-summary-row{display:flex;justify-content:space-between;font-size:0.88rem;padding:0.2rem 0}
 .co-summary-row.total{font-weight:600;font-size:1rem;border-top:1px solid var(--border);padding-top:0.5rem;margin-top:0.4rem;color:var(--green)}
-/* calendar */
-.cal-wrap{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.25rem}
-.cal-header{display:flex;align-items:center;justify-content:space-between;background:var(--green);color:#fff;padding:0.75rem 1.1rem}
-.cal-month-lbl{font-family:var(--display);font-size:1rem}
-.cal-nav{background:none;border:none;color:#fff;font-size:1rem;cursor:pointer;padding:0.2rem 0.45rem;border-radius:5px}
-.cal-nav:hover{background:rgba(255,255,255,0.15)}
-.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);background:var(--warm);border-bottom:1px solid var(--border)}
-.cal-dow{text-align:center;font-size:0.7rem;font-weight:500;color:var(--muted);padding:0.5rem 0;text-transform:uppercase}
-.cal-days{display:grid;grid-template-columns:repeat(7,1fr);padding:0.4rem;gap:3px}
-.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:0.85rem;cursor:pointer;border:none;background:none;color:var(--text);transition:all 0.14s;font-family:var(--body)}
-.cal-day:hover:not(.disabled):not(.selected){background:var(--mint);color:var(--green)}
-.cal-day.today{font-weight:700;color:var(--green)}
-.cal-day.selected{background:var(--green);color:#fff}
-.cal-day.disabled{color:#ccc;cursor:default}
-.cal-day.empty{cursor:default}
-/* time slots */
-.time-slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:1.25rem}
-@media(max-width:460px){.time-slots{grid-template-columns:repeat(3,1fr)}}
-.time-slot{padding:0.5rem 0.3rem;border-radius:7px;border:1.5px solid var(--border);background:var(--cream);font-family:var(--body);font-size:0.82rem;cursor:pointer;transition:all 0.14s;color:var(--text);text-align:center}
-.time-slot:hover{border-color:var(--mint-mid);background:var(--mint);color:var(--green)}
-.time-slot.selected{background:var(--green);color:#fff;border-color:var(--green)}
-.datetime-confirm{font-size:0.85rem;color:var(--green);font-weight:500;margin-bottom:1.25rem;min-height:1.2em}
-/* confirm btn */
 .co-confirm-btn{width:100%;padding:1rem;background:var(--green);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-size:1rem;font-weight:500;cursor:pointer;transition:background 0.2s}
 .co-confirm-btn:hover{background:var(--green-deep)}
 .co-close{background:none;border:none;color:var(--muted);font-size:0.85rem;width:100%;margin-top:0.75rem;cursor:pointer;text-decoration:underline;font-family:var(--body)}
 
-#success-box{display:none;text-align:center;padding:2rem;background:rgba(116,201,160,0.1);border-radius:var(--r);border:1px solid rgba(116,201,160,0.4);margin-top:2rem}
-#success-box h3{font-family:var(--display);color:var(--green);font-size:1.5rem;margin-bottom:0.5rem}
-#success-box p{color:var(--muted)}
-
-.tile-info-toggle{font-size:0.73rem;color:var(--mint-mid);cursor:pointer;background:none;border:none;font-family:var(--body);padding:0;margin-bottom:0.5rem;text-decoration:underline;text-underline-offset:2px}
-.tile-info-toggle:hover{color:var(--green)}
-.tile-details{display:none;font-size:0.77rem;color:var(--muted);line-height:1.45;margin-bottom:0.6rem;background:var(--warm);border-radius:7px;padding:0.55rem 0.7rem}
-.tile-details.open{display:block}
-.tile-details ul{list-style:none;padding:0}
-.tile-details ul li{padding:0.15rem 0 0.15rem 1rem;position:relative}
-.tile-details ul li::before{content:'✓';position:absolute;left:0;color:var(--mint-mid);font-weight:700;font-size:0.75rem;top:0.22rem}
-.tile-details .d-note{font-style:italic;font-size:0.75rem;margin-top:0.4rem;border-top:1px dashed var(--border);padding-top:0.4rem}
-.qty-label{font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;margin-top:0.6rem;font-weight:500;text-transform:uppercase;letter-spacing:0.4px}
-
+.furn-item{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.6rem;border-radius:8px;background:var(--warm);border:1.5px solid transparent;margin-bottom:0.4rem}
+.furn-item-img{font-size:1.6rem;width:36px;text-align:center;flex-shrink:0}
+.furn-item-info{flex:1;min-width:0}
+.furn-item-name{font-size:0.82rem;font-weight:500;color:var(--green)}
+.furn-item-price{font-size:0.72rem;color:var(--mint-mid);font-weight:600}
+.furn-item-qty{display:flex;align-items:center;gap:0.3rem;flex-shrink:0}
+.furn-qty-btn{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:#fff;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--green);font-weight:700;line-height:1;transition:all 0.15s}
+.furn-qty-btn:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.furn-qty-num{font-size:0.82rem;font-weight:600;color:var(--text);min-width:16px;text-align:center}
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:#fff;padding:0.7rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;z-index:500;transition:transform 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
 .toast.show{transform:translateX(-50%) translateY(0)}
-
 footer{background:var(--green-deep);color:rgba(255,255,255,0.6);text-align:center;padding:2rem;font-size:0.85rem}
 footer strong{color:#fff}
 </style>
@@ -208,13 +197,10 @@ footer strong{color:#fff}
   <div class="nav-logo">Leicestershire Cleaning <span>Group</span></div>
   <div class="nav-right">
     <a href="#contact" style="font-size:0.88rem;color:var(--muted);text-decoration:none;font-family:var(--body);font-weight:500">Contact</a>
-    <button class="cart-nav-btn" onclick="openCart()">
-      🛒 Cart <span class="cart-badge" id="cart-badge">0</span>
-    </button>
+    <button class="cart-nav-btn" onclick="openCart()">🛒 Cart <span class="cart-badge" id="cart-badge">0</span></button>
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-content">
     <div class="hero-badge">Professional Cleaning Services</div>
@@ -224,66 +210,106 @@ footer strong{color:#fff}
   </div>
 </section>
 
-<!-- BOOKING -->
 <section class="book-section" id="book">
   <h2>Book a Clean</h2>
-  <p class="sub">Tell us about your property, pick your services and check out — done in minutes.</p>
+  <p class="sub">Just a few quick steps — done in minutes.</p>
 
-  <!-- STEP 1: PROPERTY -->
-  <div class="step-card" id="property-step">
-    <h3>1. About your property</h3>
-    <p class="sub">This helps us prepare the right team for your home.</p>
+  <!-- STEP INDICATOR -->
+  <div class="step-indicator" id="step-indicator">
+    <div class="step-dot active" id="dot-1"></div>
+    <div style="width:30px;height:2px;background:var(--border)"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div style="width:30px;height:2px;background:var(--border)"></div>
+    <div class="step-dot" id="dot-3"></div>
+  </div>
+  <div class="step-label" id="step-label">Step 1 of 3 — Type of clean</div>
 
-    <label class="field-label">Property type</label>
-    <div class="opt-grid cols3" id="prop-type-grid">
-      <button type="button" class="opt-btn" data-val="House"><span class="e">🏠</span>House</button>
-      <button type="button" class="opt-btn" data-val="Apartment"><span class="e">🏢</span>Apartment</button>
-      <button type="button" class="opt-btn" data-val="Flat"><span class="e">🏡</span>Flat</button>
-    </div>
-
-    <div id="floors-section" style="display:none">
-      <label class="field-label">How many floors?</label>
-      <div class="opt-grid cols4" id="floors-grid">
-        <button type="button" class="opt-btn" data-val="1"><span class="e">1️⃣</span>1 floor</button>
-        <button type="button" class="opt-btn" data-val="2"><span class="e">2️⃣</span>2 floors</button>
-        <button type="button" class="opt-btn" data-val="3"><span class="e">3️⃣</span>3 floors</button>
-        <button type="button" class="opt-btn" data-val="4+"><span class="e">🏗️</span>4+ floors</button>
+  <!-- WIZARD STEP 1: TYPE OF CLEAN -->
+  <div class="wizard-step active" id="wizard-1">
+    <div class="step-card">
+      <h3>What type of clean do you need?</h3>
+      <p class="sub">Select one or more that apply to your booking.</p>
+      <div class="svc-type-grid" id="svc-type-grid">
+        <button type="button" class="svc-type-btn" data-val="End Of Tenancy Cleaning">
+          <span class="svc-type-emoji">🔑</span>
+          <div class="svc-type-name">End Of Tenancy Cleaning</div>
+          <div class="svc-type-desc">Thorough property cleaning for tenants, landlords and property managers before moving out or in.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="Deep Cleaning">
+          <span class="svc-type-emoji">🧽</span>
+          <div class="svc-type-name">Deep Cleaning</div>
+          <div class="svc-type-desc">Intensive cleaning targeting neglected areas, removing deep-seated dirt, grime and bacteria, ideal for homes not cleaned regularly.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="After Builders Cleaning">
+          <span class="svc-type-emoji">🏗️</span>
+          <div class="svc-type-name">After Builders Cleaning</div>
+          <div class="svc-type-desc">Post-renovation cleaning leaving your space spotless and dust-free, ready for immediate use. Quick, efficient and hassle-free.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="Carpet & Upholstery Cleaning">
+          <span class="svc-type-emoji">🧹</span>
+          <div class="svc-type-name">Carpet &amp; Upholstery Cleaning</div>
+          <div class="svc-type-desc">Professional cleaning removing allergens, dirt and odours, leaving your carpets and furnishings refreshed and stain-free.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="Appliances Cleaning">
+          <span class="svc-type-emoji">🔥</span>
+          <div class="svc-type-name">Appliances Cleaning</div>
+          <div class="svc-type-desc">Professional cleaning for your appliances, keeping them spotless and fully functional. Convenient and reliable.</div>
+        </button>
+        <button type="button" class="svc-type-btn" data-val="Commercial Cleaning">
+          <span class="svc-type-emoji">🏢</span>
+          <div class="svc-type-name">Commercial Cleaning</div>
+          <div class="svc-type-desc">Professional cleaning for offices, retail stores and commercial spaces, ensuring a clean and hygienic environment.</div>
+        </button>
       </div>
+      <button class="continue-btn" onclick="goToStep2()">Next →</button>
     </div>
-
-    <label class="field-label">How many bedrooms are being cleaned?</label>
-    <input type="number" id="intro-bedrooms" min="0" placeholder="e.g. 3 (enter 0 if none)" />
-
-    <button class="continue-btn" onclick="continueToServices()">Continue →</button>
   </div>
 
-  <!-- STEP 2: SERVICES -->
-  <div id="services-step">
-    <div class="prop-summary" id="prop-summary">
-      <span id="ps-type"></span><span id="ps-floors" style="display:none"></span><span id="ps-beds"></span>
-      <button onclick="goBack()">← Change</button>
+  <!-- WIZARD STEP 2: PROPERTY TYPE -->
+  <div class="wizard-step" id="wizard-2">
+    <div class="step-card">
+      <h3>About your property</h3>
+      <p class="sub">This helps us prepare the right team for your home.</p>
+      <label class="field-label">Property type</label>
+      <div class="opt-grid cols3" id="prop-type-grid">
+        <button type="button" class="opt-btn" data-val="House"><span class="e">🏠</span>House</button>
+        <button type="button" class="opt-btn" data-val="Apartment"><span class="e">🏢</span>Apartment</button>
+        <button type="button" class="opt-btn" data-val="Flat"><span class="e">🏡</span>Flat</button>
+      </div>
+      <div id="floors-section" style="display:none">
+        <label class="field-label">How many floors?</label>
+        <div class="opt-grid cols4" id="floors-grid">
+          <button type="button" class="opt-btn" data-val="1"><span class="e">1️⃣</span>1 floor</button>
+          <button type="button" class="opt-btn" data-val="2"><span class="e">2️⃣</span>2 floors</button>
+          <button type="button" class="opt-btn" data-val="3"><span class="e">3️⃣</span>3 floors</button>
+          <button type="button" class="opt-btn" data-val="4+"><span class="e">🏗️</span>4+ floors</button>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="back-btn" onclick="goToStep(1)">← Back</button>
+        <button class="continue-btn" onclick="goToStep3()">Next →</button>
+      </div>
     </div>
+  </div>
 
-    <h3 style="font-family:var(--display);font-size:1.15rem;color:var(--green);margin-bottom:0.3rem">2. Add services to your cart</h3>
+  <!-- WIZARD STEP 3: SERVICES -->
+  <div class="wizard-step" id="wizard-3">
+    <div class="prop-summary" id="prop-summary">
+      <span id="ps-type"></span>
+      <span id="ps-floors" style="display:none"></span>
+      <span id="ps-clean-type" style="font-size:0.75rem;opacity:0.8"></span>
+      <button onclick="goToStep(1)">← Change</button>
+    </div>
+    <h3 style="font-family:var(--display);font-size:1.15rem;color:var(--green);margin-bottom:0.3rem">3. Add services to your cart</h3>
     <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1.5rem">Tap a service to add it. Kitchen lets you choose appliances first.</p>
 
     <div class="tiles-grid">
-
-      <!-- BEDROOM -->
       <div class="tile">
         <div class="tile-icon">🛏️</div>
         <div class="tile-name">Bedroom</div>
         <div class="tile-price">£25 per room</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-bedroom',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-bedroom">
-          <ul>
-            <li>All tops and surfaces dusted and thoroughly wiped</li>
-            <li>Skirting boards and radiators cleaned and wiped down</li>
-            <li>Light switches and plug sockets cleaned and wiped</li>
-            <li>Floors hoovered or mopped to a spotless finish</li>
-          </ul>
-          <div class="d-note">Walls and ceilings will be dusted only.</div>
-        </div>
+        <div class="tile-details" id="info-bedroom"><ul><li>All tops and surfaces dusted and thoroughly wiped</li><li>Skirting boards and radiators cleaned and wiped down</li><li>Light switches and plug sockets cleaned and wiped</li><li>Floors hoovered or mopped to a spotless finish</li></ul><div class="d-note">Walls and ceilings will be dusted only.</div></div>
         <div class="qty-label">Quantity / No. of bedrooms</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-bedroom" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
@@ -291,23 +317,12 @@ footer strong{color:#fff}
         </div>
       </div>
 
-      <!-- KITCHEN -->
       <div class="tile">
         <div class="tile-icon">🍳</div>
         <div class="tile-name">Kitchen</div>
         <div class="tile-price">from £55</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-kitchen',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-kitchen">
-          <ul>
-            <li>Tops and surfaces sanitised and scrubbed</li>
-            <li>Sink descaled, limescale removed</li>
-            <li>Doors wiped, marks and fingerprints removed</li>
-            <li>Tiles and grout cleaned and wiped</li>
-            <li>Floors vacuumed and mopped</li>
-            <li>Optional appliances: oven, fridge, stove, microwave, freezer</li>
-          </ul>
-          <div class="d-note">Walls and ceilings dusted only. Appliances chosen in next step.</div>
-        </div>
+        <div class="tile-details" id="info-kitchen"><ul><li>Tops and surfaces sanitised and scrubbed</li><li>Sink descaled, limescale removed</li><li>Doors wiped, marks and fingerprints removed</li><li>Tiles and grout cleaned and wiped</li><li>Floors vacuumed and mopped</li><li>Optional appliances: oven, fridge, stove, microwave, freezer</li></ul><div class="d-note">Walls and ceilings dusted only. Appliances chosen in next step.</div></div>
         <div class="qty-label">Quantity / No. of kitchens</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-bottom:0.5rem">
           <input type="number" id="qty-kitchen" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
@@ -316,25 +331,12 @@ footer strong{color:#fff}
         <button class="tile-add" style="width:100%;margin-top:auto" onclick="openKitchenModal()">+ Add</button>
       </div>
 
-      <!-- BATHROOM -->
       <div class="tile">
         <div class="tile-icon">🛁</div>
         <div class="tile-name">Bathroom</div>
         <div class="tile-price">£50 per room</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-bathroom',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-bathroom">
-          <ul>
-            <li>Toilet seat and bowl disinfected inside and out</li>
-            <li>Bath or shower cabin cleaned and washed</li>
-            <li>Tiles and grout cleaned, limescale removed</li>
-            <li>Mirrors and glass polished streak-free</li>
-            <li>Sink washed and sanitised</li>
-            <li>Cabinets cleaned inside and out</li>
-            <li>Floor hoovered and mopped</li>
-            <li>Extractor fan dusted and cleaned</li>
-          </ul>
-          <div class="d-note">Walls and ceilings will be dusted only.</div>
-        </div>
+        <div class="tile-details" id="info-bathroom"><ul><li>Toilet seat and bowl disinfected inside and out</li><li>Bath or shower cabin cleaned and washed</li><li>Tiles and grout cleaned, limescale removed</li><li>Mirrors and glass polished streak-free</li><li>Sink washed and sanitised</li><li>Cabinets cleaned inside and out</li><li>Floor hoovered and mopped</li><li>Extractor fan dusted and cleaned</li></ul><div class="d-note">Walls and ceilings will be dusted only.</div></div>
         <div class="qty-label">Quantity / No. of bathrooms</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-bathroom" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
@@ -342,22 +344,12 @@ footer strong{color:#fff}
         </div>
       </div>
 
-      <!-- LIVING -->
       <div class="tile">
         <div class="tile-icon">🛋️</div>
         <div class="tile-name">Living / Hallway</div>
         <div class="tile-price">£45 per area</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-living',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-living">
-          <ul>
-            <li>Doors and door frames cleaned and wiped down</li>
-            <li>Skirting boards cleaned and wiped</li>
-            <li>Banisters and radiators cleaned and wiped</li>
-            <li>Light switches wiped, fingerprints removed</li>
-            <li>Floors hoovered and mopped where needed</li>
-          </ul>
-          <div class="d-note">Walls and ceilings will be dusted only.</div>
-        </div>
+        <div class="tile-details" id="info-living"><ul><li>Doors and door frames cleaned and wiped down</li><li>Skirting boards cleaned and wiped</li><li>Banisters and radiators cleaned and wiped</li><li>Light switches wiped, fingerprints removed</li><li>Floors hoovered and mopped where needed</li></ul><div class="d-note">Walls and ceilings will be dusted only.</div></div>
         <div class="qty-label">Quantity / No. of areas</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-living" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
@@ -365,21 +357,12 @@ footer strong{color:#fff}
         </div>
       </div>
 
-      <!-- DINING -->
       <div class="tile">
         <div class="tile-icon">🍽️</div>
         <div class="tile-name">Dining Room</div>
         <div class="tile-price">£25</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-dining',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-dining">
-          <ul>
-            <li>Comprehensive deep clean of all areas</li>
-            <li>All surfaces thoroughly dusted and sanitised</li>
-            <li>Floors vacuumed or mopped to a pristine finish</li>
-            <li>All furniture and fittings wiped clean</li>
-          </ul>
-          <div class="d-note">Walls and ceilings will be dusted only.</div>
-        </div>
+        <div class="tile-details" id="info-dining"><ul><li>Comprehensive deep clean of all areas</li><li>All surfaces thoroughly dusted and sanitised</li><li>Floors vacuumed or mopped to a pristine finish</li><li>All furniture and fittings wiped clean</li></ul><div class="d-note">Walls and ceilings will be dusted only.</div></div>
         <div class="qty-label">Quantity / No. of rooms</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-dining" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
@@ -387,22 +370,12 @@ footer strong{color:#fff}
         </div>
       </div>
 
-      <!-- CONSERVATORY -->
       <div class="tile">
         <div class="tile-icon">🌿</div>
         <div class="tile-name">Conservatory</div>
         <div class="tile-price">£40 per conservatory</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-conservatory',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-conservatory">
-          <ul>
-            <li>All surfaces vacuumed, dusted and deep cleaned</li>
-            <li>Floors, doors and door frames cleaned</li>
-            <li>Lamp shades dusted</li>
-            <li>Light switches wiped, fingerprints removed</li>
-            <li>Fireplace, radiators, mirrors and glass cleaned</li>
-            <li>Left completely spotless, top to bottom</li>
-          </ul>
-        </div>
+        <div class="tile-details" id="info-conservatory"><ul><li>All surfaces vacuumed, dusted and deep cleaned</li><li>Floors, doors and door frames cleaned</li><li>Lamp shades dusted</li><li>Light switches wiped, fingerprints removed</li><li>Fireplace, radiators, mirrors and glass cleaned</li><li>Left completely spotless, top to bottom</li></ul></div>
         <div class="qty-label">Quantity / No. of conservatories</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-conservatory" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
@@ -410,22 +383,12 @@ footer strong{color:#fff}
         </div>
       </div>
 
-      <!-- UTILITY -->
       <div class="tile">
         <div class="tile-icon">🔧</div>
         <div class="tile-name">Utility Room</div>
         <div class="tile-price">£15 per utility room</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-utility',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-utility">
-          <ul>
-            <li>All surfaces vacuumed, dusted and deep cleaned</li>
-            <li>Floors, doors, door frames and skirting boards cleaned</li>
-            <li>Lamp shades dusted</li>
-            <li>Light switches wiped clean</li>
-            <li>Left completely spotless, top to bottom</li>
-          </ul>
-          <div class="d-note">Walls and ceilings will be dusted only.</div>
-        </div>
+        <div class="tile-details" id="info-utility"><ul><li>All surfaces vacuumed, dusted and deep cleaned</li><li>Floors, doors, door frames and skirting boards cleaned</li><li>Lamp shades dusted</li><li>Light switches wiped clean</li><li>Left completely spotless, top to bottom</li></ul><div class="d-note">Walls and ceilings will be dusted only.</div></div>
         <div class="qty-label">Quantity / No. of utility rooms</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-utility" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
@@ -433,20 +396,12 @@ footer strong{color:#fff}
         </div>
       </div>
 
-      <!-- WINDOWS -->
       <div class="tile">
         <div class="tile-icon">🪟</div>
         <div class="tile-name">Windows</div>
         <div class="tile-price">from £15 (auto with bedrooms)</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-windows',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-windows">
-          <ul>
-            <li>All interior windows cleaned for every booked room</li>
-            <li>Window frames (inside) cleaned and wiped</li>
-            <li>Window sills cleaned and wiped down</li>
-          </ul>
-          <div class="d-note">Automatically included when you book bedroom cleaning. 1 bedroom £15 · 2 bedrooms £24 · 3 bedrooms £36 · 4 bedrooms £48. For 2+ bedrooms: no. of bedrooms × £12. Blinds not included.</div>
-        </div>
+        <div class="tile-details" id="info-windows"><ul><li>All interior windows cleaned for every booked room</li><li>Window frames (inside) cleaned and wiped</li><li>Window sills cleaned and wiped down</li></ul><div class="d-note">Automatically included when you book bedroom cleaning. 1 bedroom £15 · 2+ bedrooms × £12. Blinds not included.</div></div>
         <div class="qty-label">Quantity / No. of windows</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-windows" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
@@ -454,42 +409,26 @@ footer strong{color:#fff}
         </div>
       </div>
 
-      <!-- CARPET -->
       <div class="tile">
         <div class="tile-icon">🧹</div>
-        <div class="tile-name">Carpet Clean</div>
-        <div class="tile-price">£20 per room</div>
+        <div class="tile-name">Deep Carpet Clean</div>
+        <div class="tile-price">£20 per area</div>
+        <div style="background:rgba(116,201,160,0.12);border-radius:6px;padding:0.3rem 0.6rem;font-size:0.72rem;color:var(--green);margin-bottom:0.4rem;font-weight:500">✓ Hoovering / vacuuming pre-included</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-carpet',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-carpet">
-          <ul>
-            <li>Professional carpet clean for each selected room</li>
-            <li>Deep clean removes dirt, stains and built-up odours</li>
-            <li>Leaves carpets fresh, soft and revived</li>
-          </ul>
-        </div>
-        <div class="qty-label">Quantity / No. of rooms</div>
+        <div class="tile-details" id="info-carpet"><ul><li>Deep carpet clean per area</li><li>Hoovering / vacuuming carpets is pre-included with every clean</li><li>Carpet cleaning using steam / water extractor carpet clean machine</li></ul><div class="d-note">We cannot guarantee all marks/stains will be completely removed.</div></div>
+        <div class="qty-label">Quantity / No. of areas</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-carpet" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
           <button class="tile-add" style="flex:1" onclick="quickAdd('carpet')">+ Add</button>
         </div>
       </div>
 
-      <!-- SOFA -->
       <div class="tile">
         <div class="tile-icon">🛋️</div>
         <div class="tile-name">Sofa Cleaning</div>
         <div class="tile-price">£10 per sofa</div>
         <button class="tile-info-toggle" onclick="toggleInfo('info-sofa',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-sofa">
-          <ul>
-            <li>Cleaned using a professional steam cleaner or water extractor machine</li>
-            <li>Full vacuuming of all sofa surfaces and cushions</li>
-            <li>Stains treated and targeted with specialist products</li>
-            <li>Dirt and grime extracted deep from the fabric</li>
-            <li>Proper drying ensured after cleaning</li>
-          </ul>
-          <div class="d-note">Leaves your sofa fresh, sanitised and looking revived.</div>
-        </div>
+        <div class="tile-details" id="info-sofa"><ul><li>Cleaned using a professional steam cleaner or water extractor machine</li><li>Full vacuuming of all sofa surfaces and cushions</li><li>Stains treated and targeted with specialist products</li><li>Dirt and grime extracted deep from the fabric</li><li>Proper drying ensured after cleaning</li></ul><div class="d-note">Leaves your sofa fresh, sanitised and looking revived.</div></div>
         <div class="qty-label">Quantity / No. of sofas</div>
         <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
           <input type="number" id="qty-sofa" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
@@ -497,27 +436,91 @@ footer strong{color:#fff}
         </div>
       </div>
 
-      <!-- FURNITURE -->
       <div class="tile">
         <div class="tile-icon">🪑</div>
         <div class="tile-name">Furniture Cleaning</div>
-        <div class="tile-price">£5 per piece</div>
-        <button class="tile-info-toggle" onclick="toggleInfo('info-furniture',this)">👁 Click to see all info</button>
-        <div class="tile-details" id="info-furniture">
-          <ul>
-            <li>Furniture throughout the house dusted using professional cleaning equipment</li>
-            <li>Dust gently removed from all surfaces, crevices and intricate details</li>
-            <li>Resulting in a pristine, polished clean look</li>
-          </ul>
-          <div class="d-note">Each piece of furniture is carefully cleaned to ensure a thorough finish.</div>
+        <div class="tile-price">from £2 per item</div>
+        <div class="tile-details open" id="info-furniture" style="display:block;background:none;padding:0;margin-bottom:0.5rem">
+          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem;font-style:italic">Dust gently removed from all surfaces, crevices and intricate details — leaving a pristine, polished finish.</div>
+          <div class="furn-item">
+            <div class="furn-item-img">🛋️</div>
+            <div class="furn-item-info"><div class="furn-item-name">Single Sofa</div><div class="furn-item-price">£5 each</div></div>
+            <div class="furn-item-qty">
+              <button class="furn-qty-btn" onclick="furnQty('single-sofa',-1)">−</button>
+              <span class="furn-qty-num" id="furn-num-single-sofa">0</span>
+              <button class="furn-qty-btn" onclick="furnQty('single-sofa',1)">+</button>
+            </div>
+          </div>
+          <div class="furn-item">
+            <div class="furn-item-img">🛋️</div>
+            <div class="furn-item-info"><div class="furn-item-name">Double / Triple Sofa</div><div class="furn-item-price">£10 each</div></div>
+            <div class="furn-item-qty">
+              <button class="furn-qty-btn" onclick="furnQty('double-sofa',-1)">−</button>
+              <span class="furn-qty-num" id="furn-num-double-sofa">0</span>
+              <button class="furn-qty-btn" onclick="furnQty('double-sofa',1)">+</button>
+            </div>
+          </div>
+          <div class="furn-item">
+            <div class="furn-item-img">🪟</div>
+            <div class="furn-item-info"><div class="furn-item-name">Blinds</div><div class="furn-item-price">£5 each</div></div>
+            <div class="furn-item-qty">
+              <button class="furn-qty-btn" onclick="furnQty('blinds',-1)">−</button>
+              <span class="furn-qty-num" id="furn-num-blinds">0</span>
+              <button class="furn-qty-btn" onclick="furnQty('blinds',1)">+</button>
+            </div>
+          </div>
+          <div class="furn-item">
+            <div class="furn-item-img">📺</div>
+            <div class="furn-item-info"><div class="furn-item-name">TV Table / Stand</div><div class="furn-item-price">£5 each</div></div>
+            <div class="furn-item-qty">
+              <button class="furn-qty-btn" onclick="furnQty('tv-stand',-1)">−</button>
+              <span class="furn-qty-num" id="furn-num-tv-stand">0</span>
+              <button class="furn-qty-btn" onclick="furnQty('tv-stand',1)">+</button>
+            </div>
+          </div>
+          <div class="furn-item">
+            <div class="furn-item-img">🪑</div>
+            <div class="furn-item-info"><div class="furn-item-name">Chair</div><div class="furn-item-price">£2 each</div></div>
+            <div class="furn-item-qty">
+              <button class="furn-qty-btn" onclick="furnQty('chair',-1)">−</button>
+              <span class="furn-qty-num" id="furn-num-chair">0</span>
+              <button class="furn-qty-btn" onclick="furnQty('chair',1)">+</button>
+            </div>
+          </div>
+          <div class="furn-item">
+            <div class="furn-item-img">🪑</div>
+            <div class="furn-item-info"><div class="furn-item-name">Footstool</div><div class="furn-item-price">£2 each</div></div>
+            <div class="furn-item-qty">
+              <button class="furn-qty-btn" onclick="furnQty('footstool',-1)">−</button>
+              <span class="furn-qty-num" id="furn-num-footstool">0</span>
+              <button class="furn-qty-btn" onclick="furnQty('footstool',1)">+</button>
+            </div>
+          </div>
+          <div class="furn-item">
+            <div class="furn-item-img">📚</div>
+            <div class="furn-item-info"><div class="furn-item-name">Bookshelf</div><div class="furn-item-price">£4 each</div></div>
+            <div class="furn-item-qty">
+              <button class="furn-qty-btn" onclick="furnQty('bookshelf',-1)">−</button>
+              <span class="furn-qty-num" id="furn-num-bookshelf">0</span>
+              <button class="furn-qty-btn" onclick="furnQty('bookshelf',1)">+</button>
+            </div>
+          </div>
+          <div class="furn-item" style="flex-direction:column;align-items:flex-start;gap:0.3rem">
+            <div style="display:flex;align-items:center;gap:0.5rem;width:100%">
+              <div class="furn-item-img">✏️</div>
+              <div class="furn-item-info"><div class="furn-item-name">Other furniture</div><div class="furn-item-price">£4 per item — describe below</div></div>
+              <div class="furn-item-qty">
+                <button class="furn-qty-btn" onclick="furnQty('other',-1)">−</button>
+                <span class="furn-qty-num" id="furn-num-other">0</span>
+                <button class="furn-qty-btn" onclick="furnQty('other',1)">+</button>
+              </div>
+            </div>
+            <input type="text" id="furn-other-desc" placeholder="Describe the furniture (e.g. wardrobe, desk...)" style="width:100%;margin:0;padding:0.4rem 0.6rem;font-size:0.78rem;border-radius:7px"/>
+          </div>
+          <div style="font-size:0.78rem;font-weight:600;color:var(--green);margin-top:0.5rem;text-align:right">Total: £<span id="furn-total">0</span></div>
         </div>
-        <div class="qty-label">Quantity / No. of pieces</div>
-        <div style="display:flex;align-items:center;gap:0.5rem;width:100%;margin-top:auto">
-          <input type="number" id="qty-furniture" min="1" value="1" style="width:60px;margin:0;padding:0.45rem 0.5rem;font-size:0.85rem"/>
-          <button class="tile-add" style="flex:1" onclick="quickAdd('furniture')">+ Add</button>
-        </div>
+        <button class="tile-add" style="width:100%;margin-top:auto" onclick="addFurnitureToCart()">+ Add</button>
       </div>
-
     </div>
 
     <button class="continue-btn" onclick="openCart()" style="max-width:300px;display:block;margin:0 auto">View cart & checkout →</button>
@@ -530,45 +533,31 @@ footer strong{color:#fff}
   </div>
 </section>
 
-<!-- CONTACT SECTION -->
 <section id="contact" style="background:var(--warm);border-top:1px solid var(--border);padding:4rem 2rem">
   <div style="max-width:700px;margin:0 auto;text-align:center">
     <h2 style="font-family:var(--display);font-size:clamp(1.6rem,3vw,2.2rem);color:var(--green);margin-bottom:0.5rem">Get in touch</h2>
-    <p style="color:var(--muted);font-size:0.95rem;margin-bottom:2.5rem">Have a question before booking? We're happy to help — give us a call or send us a message.</p>
+    <p style="color:var(--muted);font-size:0.95rem;margin-bottom:2.5rem">Have a question before booking? We're happy to help.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem">
-
-      <!-- CALL -->
       <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:1.75rem 1.25rem;text-align:center">
         <div style="font-size:2rem;margin-bottom:0.6rem">📞</div>
         <div style="font-family:var(--display);font-size:1rem;color:var(--green);margin-bottom:0.3rem">Call us</div>
         <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Mon–Sat, 9am–5pm</div>
-        <a href="tel:07777791077" style="display:inline-block;background:var(--green);color:#fff;padding:0.6rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none;transition:background 0.2s" onmouseover="this.style.background='var(--green-deep)'" onmouseout="this.style.background='var(--green)'">
-          Call now
-        </a>
+        <a href="tel:07777791077" style="display:inline-block;background:var(--green);color:#fff;padding:0.6rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none">Call now</a>
         <div style="font-size:0.78rem;color:var(--muted);margin-top:0.6rem">07777 791077</div>
       </div>
-
-      <!-- EMAIL -->
       <div style="background:#fff;border-radius:14px;border:1px solid var(--border);padding:1.75rem 1.25rem;text-align:center">
         <div style="font-size:2rem;margin-bottom:0.6rem">✉️</div>
         <div style="font-family:var(--display);font-size:1rem;color:var(--green);margin-bottom:0.3rem">Email us</div>
         <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">We reply within a few hours</div>
-        <a href="mailto:aaaplb7@gmail.com" style="display:inline-block;background:var(--green);color:#fff;padding:0.6rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none;transition:background 0.2s" onmouseover="this.style.background='var(--green-deep)'" onmouseout="this.style.background='var(--green)'">
-          Send email
-        </a>
+        <a href="mailto:aaaplb7@gmail.com" style="display:inline-block;background:var(--green);color:#fff;padding:0.6rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none">Send email</a>
         <div style="font-size:0.78rem;color:var(--muted);margin-top:0.6rem">aaaplb7@gmail.com</div>
       </div>
-
-      <!-- BOOK -->
       <div style="background:var(--green);border-radius:14px;padding:1.75rem 1.25rem;text-align:center">
         <div style="font-size:2rem;margin-bottom:0.6rem">📅</div>
         <div style="font-family:var(--display);font-size:1rem;color:#fff;margin-bottom:0.3rem">Book online</div>
         <div style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1rem">Quick &amp; easy — takes 2 minutes</div>
-        <a href="#book" style="display:inline-block;background:var(--mint-mid);color:var(--green-deep);padding:0.6rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none">
-          Book now
-        </a>
+        <a href="#book" style="display:inline-block;background:var(--mint-mid);color:var(--green-deep);padding:0.6rem 1.5rem;border-radius:100px;font-family:var(--body);font-size:0.9rem;font-weight:500;text-decoration:none">Book now</a>
       </div>
-
     </div>
   </div>
 </section>
@@ -603,18 +592,10 @@ footer strong{color:#fff}
 
 <!-- CART DRAWER -->
 <div class="cart-drawer" id="cart-drawer">
-  <div class="cart-header">
-    <h3>🛒 Your cart</h3>
-    <button class="cart-close" onclick="closeCart()">✕</button>
-  </div>
-  <div class="cart-body" id="cart-body">
-    <div class="cart-empty">Your cart is empty.<br/>Add a service to get started.</div>
-  </div>
+  <div class="cart-header"><h3>🛒 Your cart</h3><button class="cart-close" onclick="closeCart()">✕</button></div>
+  <div class="cart-body" id="cart-body"><div class="cart-empty">Your cart is empty.<br/>Add a service to get started.</div></div>
   <div class="cart-footer">
-    <div class="cart-total-row">
-      <span class="cart-total-label">Estimated total</span>
-      <span class="cart-total-val" id="cart-total">£0</span>
-    </div>
+    <div class="cart-total-row"><span class="cart-total-label">Estimated total</span><span class="cart-total-val" id="cart-total">£0</span></div>
     <button class="checkout-btn" id="checkout-btn" onclick="openCheckout()" disabled>Checkout →</button>
   </div>
 </div>
@@ -623,58 +604,32 @@ footer strong{color:#fff}
 <div class="checkout-modal" id="checkout-modal">
   <div class="co-box">
     <h3>Confirm your booking</h3>
-
-    <div class="co-section">
-      <div class="co-section-title">Order summary</div>
-      <div class="co-summary" id="co-summary"></div>
-    </div>
-
+    <div class="co-section"><div class="co-section-title">Order summary</div><div class="co-summary" id="co-summary"></div></div>
     <div class="divider"></div>
-
     <div class="co-section">
       <div class="co-section-title">Payment method</div>
-      <div class="pay-opts" style="grid-template-columns:repeat(3,1fr)">
-        <button type="button" class="pay-opt" data-val="Cash" onclick="selectPayment(this)">
-          <span class="pe">💵</span>
-          <div class="pt">Cash</div>
-          <div class="ps">Pay on the day</div>
-        </button>
-        <button type="button" class="pay-opt" data-val="Card" onclick="selectPayment(this)">
-          <span class="pe">💳</span>
-          <div class="pt">Card</div>
-          <div class="ps">Pay on the day</div>
-        </button>
-        <button type="button" class="pay-opt" data-val="Online" onclick="selectPayment(this)">
-          <span class="pe">🌐</span>
-          <div class="pt">Pay Online</div>
-          <div class="ps">Pay now via Stripe</div>
-        </button>
+      <div class="pay-opts">
+        <button type="button" class="pay-opt" data-val="Cash" onclick="selectPayment(this)"><span class="pe">💵</span><div class="pt">Cash</div><div class="ps">Pay on the day</div></button>
+        <button type="button" class="pay-opt" data-val="Card" onclick="selectPayment(this)"><span class="pe">💳</span><div class="pt">Card</div><div class="ps">Pay on the day</div></button>
+        <button type="button" class="pay-opt" data-val="Online" onclick="selectPayment(this)"><span class="pe">🌐</span><div class="pt">Pay Online</div><div class="ps">Pay now via Stripe</div></button>
       </div>
       <div class="pay-note" id="pay-note"></div>
     </div>
-
     <div class="divider"></div>
-
     <div class="co-section">
       <div class="co-section-title">Your details</div>
       <div class="field-row">
         <div><label class="field-label">Full name</label><input type="text" id="cust-name" placeholder="Jane Smith"/></div>
         <div><label class="field-label">Phone</label><input type="tel" id="cust-phone" placeholder="+44 7700 000000"/></div>
       </div>
-      <label class="field-label">Email</label>
-      <input type="email" id="cust-email" placeholder="jane@example.com"/>
+      <label class="field-label">Email</label><input type="email" id="cust-email" placeholder="jane@example.com"/>
       <div class="field-row">
         <div><label class="field-label">House no.</label><input type="text" id="cust-house" placeholder="42"/></div>
         <div><label class="field-label">Postcode</label><input type="text" id="cust-postcode" placeholder="CR0 1AA"/></div>
       </div>
-      <label class="field-label">Street address</label>
-      <input type="text" id="cust-address" placeholder="e.g. High Street, Croydon"/>
+      <label class="field-label">Street address</label><input type="text" id="cust-address" placeholder="e.g. High Street, Croydon"/>
     </div>
-
-    <div style="background:rgba(116,201,160,0.12);border:1px solid rgba(116,201,160,0.4);border-radius:10px;padding:0.85rem 1rem;font-size:0.85rem;color:var(--green);margin-bottom:1.25rem;">
-      📅 After confirming, you'll be taken to our booking calendar to pick your date and time. This locks your slot so no one else can take it.
-    </div>
-
+    <div style="background:rgba(116,201,160,0.12);border:1px solid rgba(116,201,160,0.4);border-radius:10px;padding:0.85rem 1rem;font-size:0.85rem;color:var(--green);margin-bottom:1.25rem;">📅 After confirming, you'll be taken to our booking calendar to pick your date and time.</div>
     <button class="co-confirm-btn" onclick="submitBooking()" id="confirm-btn">Confirm &amp; Pick a Date →</button>
     <button class="co-close" onclick="closeCheckout()">← Back to cart</button>
   </div>
@@ -682,22 +637,59 @@ footer strong{color:#fff}
 
 <script>
 var cart = [];
-var introPropType = '', introFloors = '', introBedrooms = '';
+var introPropType = '', introFloors = '';
+var selectedSvcTypes = [];
+var selectedPayment = '';
 var KITCHEN_APPL = {'single-oven':15,'double-oven':30,'fridge':15,'stove':15,'microwave':15,'freezer':15};
 var PRICES = {bedroom:25,bathroom:50,living:45,dining:25,conservatory:40,utility:15,windows:0,carpet:20,sofa:10,furniture:5};
+var LABELS = {bedroom:'Bedroom',bathroom:'Bathroom & Toilet',living:'Living / Hallway',dining:'Dining Room',conservatory:'Conservatory',utility:'Utility Room',windows:'Window Cleaning',carpet:'Deep Carpet Clean',sofa:'Sofa Cleaning',furniture:'Furniture Cleaning'};
 
-  function toggleInfo(id, btn) {
-    var el = document.getElementById(id);
-    var isOpen = el.classList.contains('open');
-    el.classList.toggle('open', !isOpen);
-    btn.textContent = isOpen ? '👁 Click to see all info' : '🔼 Hide info';
+// ── WIZARD NAVIGATION ──
+function goToStep(n) {
+  document.querySelectorAll('.wizard-step').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('wizard-' + n).classList.add('active');
+  // update dots
+  [1,2,3].forEach(function(i){
+    var dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active','done');
+    if (i < n) dot.classList.add('done');
+    else if (i === n) dot.classList.add('active');
+  });
+  var labels = ['Step 1 of 3 — Type of clean','Step 2 of 3 — Your property','Step 3 of 3 — Choose services'];
+  document.getElementById('step-label').textContent = labels[n-1];
+  document.getElementById('book').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function goToStep2() {
+  if (!selectedSvcTypes.length) { alert('Please select at least one type of clean.'); return; }
+  goToStep(2);
+}
+
+function goToStep3() {
+  if (!introPropType) { alert('Please select your property type.'); return; }
+  if (introPropType === 'House' && !introFloors) { alert('Please select how many floors.'); return; }
+  // update summary bar
+  document.getElementById('ps-type').textContent = introPropType;
+  var flEl = document.getElementById('ps-floors');
+  if (introFloors) { flEl.textContent = introFloors + ' floor' + (introFloors==='1'?'':'s'); flEl.style.display=''; }
+  document.getElementById('ps-clean-type').textContent = selectedSvcTypes.join(', ');
+  goToStep(3);
+}
+
+// ── CLEAN TYPE SELECTION ──
+document.getElementById('svc-type-grid').addEventListener('click', function(e) {
+  var btn = e.target.closest('.svc-type-btn'); if (!btn) return;
+  var val = btn.dataset.val;
+  if (btn.classList.contains('active')) {
+    btn.classList.remove('active');
+    selectedSvcTypes = selectedSvcTypes.filter(function(v){ return v !== val; });
+  } else {
+    btn.classList.add('active');
+    selectedSvcTypes.push(val);
   }
-var LABELS = {bedroom:'Bedroom',bathroom:'Bathroom & Toilet',living:'Living / Hallway',dining:'Dining Room',conservatory:'Conservatory',utility:'Utility Room',windows:'Window Cleaning',carpet:'Carpet Clean',sofa:'Sofa Cleaning',furniture:'Furniture Cleaning'};
-var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-var selectedDate = null, selectedTime = null, selectedPayment = '';
-var calYear, calMonth;
+});
 
-// ── PROPERTY STEP ──
+// ── PROPERTY TYPE ──
 document.getElementById('prop-type-grid').addEventListener('click', function(e) {
   var btn = e.target.closest('.opt-btn'); if (!btn) return;
   document.querySelectorAll('#prop-type-grid .opt-btn').forEach(function(b){b.classList.remove('active')});
@@ -710,25 +702,16 @@ document.getElementById('floors-grid').addEventListener('click', function(e) {
   document.querySelectorAll('#floors-grid .opt-btn').forEach(function(b){b.classList.remove('active')});
   btn.classList.add('active'); introFloors = btn.dataset.val;
 });
-function continueToServices() {
-  if (!introPropType) { alert('Please select your property type.'); return; }
-  if (introPropType === 'House' && !introFloors) { alert('Please select how many floors.'); return; }
-  introBedrooms = document.getElementById('intro-bedrooms').value || '0';
-  // build summary
-  document.getElementById('ps-type').textContent = introPropType;
-  var flEl = document.getElementById('ps-floors');
-  if (introFloors) { flEl.textContent = introFloors + ' floor' + (introFloors==='1'?'':'s'); flEl.style.display=''; }
-  document.getElementById('ps-beds').textContent = introBedrooms + ' bedroom' + (parseInt(introBedrooms)===1?'':'s');
-  document.getElementById('property-step').style.display = 'none';
-  document.getElementById('services-step').style.display = 'block';
-}
-function goBack() {
-  document.getElementById('services-step').style.display = 'none';
-  document.getElementById('property-step').style.display = 'block';
+
+// ── TOGGLE INFO ──
+function toggleInfo(id, btn) {
+  var el = document.getElementById(id);
+  var isOpen = el.classList.contains('open');
+  el.classList.toggle('open', !isOpen);
+  btn.textContent = isOpen ? '👁 Click to see all info' : '🔼 Hide info';
 }
 
-// ── WINDOW PRICE CALCULATOR ──
-// 1 bedroom = £15, 2+ bedrooms = qty × £12
+// ── WINDOW PRICE ──
 function windowPriceForBedrooms(qty) {
   if (qty <= 0) return 0;
   if (qty === 1) return 15;
@@ -747,29 +730,18 @@ function quickAdd(type) {
   if (type === 'dining' && qty > 1) detail = qty + ' rooms × £' + unitPrice + ' each';
 
   if (type === 'bedroom') {
-    // Remove any existing bedroom or window items from cart first
     cart = cart.filter(function(i) { return i.tab !== 'bedroom' && i.tab !== 'windows'; });
     var winPrice = windowPriceForBedrooms(qty);
     detail = qty + ' bedroom' + (qty > 1 ? 's' : '') + ' — window cleaning included';
-    var bedItem = {id: Date.now(), tab: 'bedroom', label: label, price: price, detail: detail};
-    var winItem = {id: Date.now() + 1, tab: 'windows', label: 'Window Cleaning — all house windows', price: winPrice, detail: 'All house windows cleaned · £' + winPrice + ' for ' + qty + ' bedroom' + (qty>1?'s':'')};
-    cart.push(bedItem);
-    cart.push(winItem);
-    renderCart();
-    flashBtn(type);
-    showToast();
+    cart.push({id: Date.now(), tab: 'bedroom', label: label, price: price, detail: detail});
+    cart.push({id: Date.now() + 1, tab: 'windows', label: 'Window Cleaning — all house windows', price: winPrice, detail: 'All house windows cleaned · £' + winPrice + ' for ' + qty + ' bedroom' + (qty>1?'s':'')});
+    renderCart(); flashBtn(type); showToast();
   } else if (type === 'windows') {
-    // Check if bedrooms already in cart — if so, warn
-    var hasBedroom = cart.some(function(i) { return i.tab === 'bedroom'; });
-    if (hasBedroom) {
-      alert('Window cleaning is already included based on your bedroom count. To change it, update your bedroom quantity.');
-      return;
-    }
+    if (cart.some(function(i){return i.tab==='bedroom';})) { alert('Window cleaning is already included based on your bedroom count.'); return; }
     addToCart({id: Date.now(), tab: type, label: label, price: price, detail: detail});
   } else {
     addToCart({id: Date.now(), tab: type, label: label, price: price, detail: detail});
   }
-
   if (qEl) qEl.value = 1;
   if (type !== 'bedroom') flashBtn(type);
 }
@@ -777,292 +749,207 @@ function quickAdd(type) {
 function setAddedState(type, added) {
   document.querySelectorAll('.tile-add').forEach(function(b) {
     var oc = b.getAttribute('onclick') || '';
-    if (oc.includes("quickAdd('" + type + "')") || oc.includes("quickAdd(\"" + type + "\")") ||
-        (type === 'kitchen' && (oc.includes('openKitchenModal') || oc.includes('Kitchen')))) {
-      if (added) { b.textContent = '✓ Added'; b.classList.add('added'); b.style.background = 'var(--mint-mid)'; b.style.color = 'var(--green-deep)'; }
-      else { b.textContent = '+ Add'; b.classList.remove('added'); b.style.background = ''; b.style.color = ''; }
+    if (oc.includes("quickAdd('" + type + "')") || (type==='kitchen' && oc.includes('openKitchenModal'))) {
+      if (added) { b.textContent='✓ Added'; b.classList.add('added'); b.style.background='var(--mint-mid)'; b.style.color='var(--green-deep)'; }
+      else { b.textContent='+ Add'; b.classList.remove('added'); b.style.background=''; b.style.color=''; }
     }
   });
 }
-
 function syncButtonStates() {
-  var tabs = ['bedroom','bathroom','living','dining','conservatory','utility','windows','carpet','kitchen','sofa','furniture'];
-  tabs.forEach(function(type) {
-    var inCart = cart.some(function(i) { return i.tab === type; });
-    setAddedState(type, inCart);
+  ['bedroom','bathroom','living','dining','conservatory','utility','windows','carpet','kitchen','sofa','furniture'].forEach(function(type) {
+    setAddedState(type, cart.some(function(i){return i.tab===type;}));
   });
 }
-
 function showToast() {
-  var toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(function() { toast.classList.remove('show'); }, 2000);
+  var t = document.getElementById('toast'); t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2000);
+}
+function flashBtn(type) { setAddedState(type, true); if(type==='bedroom') setAddedState('windows',true); showToast(); }
+
+// ── FURNITURE ──
+var FURN_PRICES = {'single-sofa':5,'double-sofa':10,'blinds':5,'tv-stand':5,'chair':2,'footstool':2,'bookshelf':4,'other':4};
+var FURN_NAMES = {'single-sofa':'Single Sofa','double-sofa':'Double/Triple Sofa','blinds':'Blinds','tv-stand':'TV Table/Stand','chair':'Chair','footstool':'Footstool','bookshelf':'Bookshelf','other':'Other Furniture'};
+var furnQtys = {'single-sofa':0,'double-sofa':0,'blinds':0,'tv-stand':0,'chair':0,'footstool':0,'bookshelf':0,'other':0};
+
+function furnQty(id, delta) {
+  furnQtys[id] = Math.max(0, (furnQtys[id] || 0) + delta);
+  document.getElementById('furn-num-' + id).textContent = furnQtys[id];
+  var total = Object.keys(furnQtys).reduce(function(s,k){ return s + furnQtys[k] * FURN_PRICES[k]; }, 0);
+  document.getElementById('furn-total').textContent = total;
 }
 
-function flashBtn(type) {
-  setAddedState(type, true);
-  if (type === 'bedroom') setAddedState('windows', true);
-  showToast();
+function addFurnitureToCart() {
+  var lines = []; var total = 0;
+  Object.keys(furnQtys).forEach(function(id) {
+    if (furnQtys[id] > 0) {
+      var cost = furnQtys[id] * FURN_PRICES[id];
+      total += cost;
+      var name = FURN_NAMES[id];
+      if (id === 'other') {
+        var desc = document.getElementById('furn-other-desc').value;
+        name = desc ? 'Other (' + desc + ')' : 'Other Furniture';
+      }
+      lines.push(name + ' x' + furnQtys[id] + ' (£' + cost + ')');
+    }
+  });
+  if (!lines.length) { alert('Please select at least one furniture item.'); return; }
+  addToCart({id: Date.now(), tab: 'furniture', label: 'Furniture Cleaning', price: total, detail: lines.join(', ')});
+  Object.keys(furnQtys).forEach(function(id) { furnQtys[id] = 0; document.getElementById('furn-num-' + id).textContent = '0'; });
+  document.getElementById('furn-total').textContent = '0';
+  document.getElementById('furn-other-desc').value = '';
+  flashBtn('furniture');
 }
 
-// ── KITCHEN MODAL ──
-function openKitchenModal() {
-  document.getElementById('kitchen-modal').classList.add('open');
-  updateKitchenPreview();
-}
+// ── KITCHEN ──
+function openKitchenModal() { document.getElementById('kitchen-modal').classList.add('open'); updateKitchenPreview(); }
 function closeKitchenModal() { document.getElementById('kitchen-modal').classList.remove('open'); }
 document.querySelectorAll('.appl-item').forEach(function(item) {
   item.addEventListener('click', function(e) {
     var cb = item.querySelector('input[type="checkbox"]');
     if (e.target !== cb) { cb.checked = !cb.checked; }
-    item.classList.toggle('sel', cb.checked);
-    updateKitchenPreview();
+    item.classList.toggle('sel', cb.checked); updateKitchenPreview();
   });
 });
-document.querySelectorAll('.appl-item input[type="number"]').forEach(function(inp) { inp.addEventListener('input', updateKitchenPreview); });
+document.querySelectorAll('.appl-item input[type="number"]').forEach(function(inp){inp.addEventListener('input',updateKitchenPreview);});
 document.getElementById('qty-kitchen').addEventListener('input', updateKitchenPreview);
 function updateKitchenPreview() {
-  var kitchenQty = parseInt(document.getElementById('qty-kitchen').value) || 1;
-  var total = 55 * kitchenQty;
-  Object.keys(KITCHEN_APPL).forEach(function(id) {
-    var cb = document.getElementById('cb-' + id);
-    var qi = document.getElementById('qty-' + id);
-    if (cb && cb.checked) total += KITCHEN_APPL[id] * ((parseInt(qi ? qi.value : 1)) || 1);
+  var kq = parseInt(document.getElementById('qty-kitchen').value)||1;
+  var total = 55*kq;
+  Object.keys(KITCHEN_APPL).forEach(function(id){
+    var cb=document.getElementById('cb-'+id), qi=document.getElementById('qty-'+id);
+    if(cb&&cb.checked) total+=KITCHEN_APPL[id]*((parseInt(qi?qi.value:1))||1);
   });
-  document.getElementById('kitchen-price-preview').textContent = total;
+  document.getElementById('kitchen-price-preview').textContent=total;
 }
 function addKitchenToCart() {
-  var kitchenQty = parseInt(document.getElementById('qty-kitchen').value) || 1;
-  var basePrice = 55 * kitchenQty;
-  var price = basePrice; var applLines = [];
-  Object.keys(KITCHEN_APPL).forEach(function(id) {
-    var cb = document.getElementById('cb-' + id);
-    var qi = document.getElementById('qty-' + id);
-    if (cb && cb.checked) {
-      var q = parseInt(qi ? qi.value : 1) || 1;
-      price += KITCHEN_APPL[id] * q;
-      applLines.push(id.replace('-',' ') + (q > 1 ? ' x'+q : ''));
-    }
+  var kq=parseInt(document.getElementById('qty-kitchen').value)||1;
+  var price=55*kq; var applLines=[];
+  Object.keys(KITCHEN_APPL).forEach(function(id){
+    var cb=document.getElementById('cb-'+id),qi=document.getElementById('qty-'+id);
+    if(cb&&cb.checked){var q=parseInt(qi?qi.value:1)||1;price+=KITCHEN_APPL[id]*q;applLines.push(id.replace('-',' ')+(q>1?' x'+q:''));}
   });
-  var label = 'Kitchen Deep Clean' + (kitchenQty > 1 ? ' x' + kitchenQty : '');
-  var detail = (kitchenQty > 1 ? kitchenQty + ' kitchens (£55 each) ' : 'Base clean') + (applLines.length ? ' + ' + applLines.join(', ') : '');
-  addToCart({id: Date.now(), tab: 'kitchen', label: label, price: price, detail: detail});
-  // reset
-  document.querySelectorAll('.appl-item').forEach(function(item) {
-    var cb = item.querySelector('input[type="checkbox"]'); if (cb) cb.checked = false;
-    item.classList.remove('sel');
-    var qi = item.querySelector('input[type="number"]'); if (qi) qi.value = 1;
+  var label='Kitchen Deep Clean'+(kq>1?' x'+kq:'');
+  var detail=(kq>1?kq+' kitchens (£55 each) ':'Base clean')+(applLines.length?' + '+applLines.join(', '):'');
+  addToCart({id:Date.now(),tab:'kitchen',label:label,price:price,detail:detail});
+  document.querySelectorAll('.appl-item').forEach(function(item){
+    var cb=item.querySelector('input[type="checkbox"]');if(cb)cb.checked=false;
+    item.classList.remove('sel');var qi=item.querySelector('input[type="number"]');if(qi)qi.value=1;
   });
-  updateKitchenPreview();
-  closeKitchenModal();
-  flashBtn('kitchen');
-  showToast();
+  updateKitchenPreview(); closeKitchenModal(); flashBtn('kitchen');
 }
 
 // ── CART ──
-function addToCart(item) {
-  if (!item.tab) item.tab = '';
-  cart.push(item);
-  renderCart();
-}
+function addToCart(item) { if(!item.tab)item.tab=''; cart.push(item); renderCart(); }
 function removeFromCart(id) {
-  var removing = cart.find(function(i){return i.id===id;});
-  cart = cart.filter(function(i) { return i.id !== id; });
-  // If removing a bedroom, also remove the auto-added windows
-  if (removing && removing.tab === 'bedroom') {
-    cart = cart.filter(function(i) { return i.tab !== 'windows'; });
-  }
+  var r=cart.find(function(i){return i.id===id;});
+  cart=cart.filter(function(i){return i.id!==id;});
+  if(r&&r.tab==='bedroom') cart=cart.filter(function(i){return i.tab!=='windows';});
   renderCart();
 }
 function renderCart() {
-  var body = document.getElementById('cart-body');
-  var total = cart.reduce(function(s,i){return s+i.price;},0);
-  if (!cart.length) {
-    body.innerHTML = '<div class="cart-empty">Your cart is empty.<br/>Add a service to get started.</div>';
-    document.getElementById('cart-total').textContent = '£0';
-    document.getElementById('checkout-btn').disabled = true;
-    document.getElementById('cart-badge').style.display = 'none';
-    syncButtonStates();
-    return;
+  var body=document.getElementById('cart-body');
+  if(!cart.length){
+    body.innerHTML='<div class="cart-empty">Your cart is empty.<br/>Add a service to get started.</div>';
+    document.getElementById('cart-total').textContent='£0';
+    document.getElementById('checkout-btn').disabled=true;
+    document.getElementById('cart-badge').style.display='none';
+    syncButtonStates(); return;
   }
-  body.innerHTML = '';
-  cart.forEach(function(item) {
-    var row = document.createElement('div'); row.className = 'cart-item';
-    row.innerHTML = '<div><div class="ci-name">'+item.label+'</div>'+(item.detail?'<div class="ci-detail">'+item.detail+'</div>':'')+'</div>'+
+  body.innerHTML='';
+  cart.forEach(function(item){
+    var row=document.createElement('div');row.className='cart-item';
+    row.innerHTML='<div><div class="ci-name">'+item.label+'</div>'+(item.detail?'<div class="ci-detail">'+item.detail+'</div>':'')+'</div>'+
       '<div class="ci-right"><span class="ci-price">'+(item.price>0?'£'+item.price:'Quote')+'</span>'+
       '<button class="ci-remove" onclick="removeFromCart('+item.id+')">✕</button></div>';
     body.appendChild(row);
   });
-  var rawTotal = cart.reduce(function(s,i){return s+i.price;},0);
-  var total = Math.max(rawTotal, 180);
-  document.getElementById('cart-total').textContent = total > 0 ? '£'+total : 'Quote';
-  if (rawTotal < 180 && rawTotal > 0) {
-    var minNote = document.getElementById('min-price-note');
-    if (!minNote) {
-      minNote = document.createElement('div');
-      minNote.id = 'min-price-note';
-      minNote.style.cssText = 'font-size:0.78rem;color:var(--muted);margin-top:0.4rem;text-align:center';
-      minNote.textContent = 'Minimum booking price is £180';
-      document.getElementById('cart-total').parentNode.appendChild(minNote);
-    }
-  } else {
-    var minNote = document.getElementById('min-price-note');
-    if (minNote) minNote.remove();
-  }
-  document.getElementById('checkout-btn').disabled = false;
-  var badge = document.getElementById('cart-badge');
-  badge.textContent = cart.length; badge.style.display = 'inline';
+  var rawTotal=cart.reduce(function(s,i){return s+i.price;},0);
+  var total=Math.max(rawTotal,180);
+  document.getElementById('cart-total').textContent=total>0?'£'+total:'Quote';
+  var minNote=document.getElementById('min-price-note');
+  if(rawTotal<180&&rawTotal>0){
+    if(!minNote){minNote=document.createElement('div');minNote.id='min-price-note';minNote.style.cssText='font-size:0.78rem;color:var(--muted);margin-top:0.4rem;text-align:center';minNote.textContent='Minimum booking price is £180';document.getElementById('cart-total').parentNode.appendChild(minNote);}
+  } else { if(minNote)minNote.remove(); }
+  document.getElementById('checkout-btn').disabled=false;
+  var badge=document.getElementById('cart-badge');badge.textContent=cart.length;badge.style.display='inline';
   syncButtonStates();
 }
-function openCart() { document.getElementById('cart-drawer').classList.add('open'); }
-function closeCart() { document.getElementById('cart-drawer').classList.remove('open'); }
+function openCart(){document.getElementById('cart-drawer').classList.add('open');}
+function closeCart(){document.getElementById('cart-drawer').classList.remove('open');}
 
 // ── CHECKOUT ──
-function openCheckout() {
+function openCheckout(){
   closeCart();
-  var rawTotal = cart.reduce(function(s,i){return s+i.price;},0);
-  var total = Math.max(rawTotal, 180);
-  var summary = document.getElementById('co-summary');
-  summary.innerHTML = cart.map(function(i){
+  var rawTotal=cart.reduce(function(s,i){return s+i.price;},0);
+  var total=Math.max(rawTotal,180);
+  var summary=document.getElementById('co-summary');
+  summary.innerHTML=cart.map(function(i){
     return '<div class="co-summary-row"><span>'+i.label+(i.detail?' <span style="font-size:0.75rem;color:var(--muted)">— '+i.detail+'</span>':'')+'</span><span>'+(i.price>0?'£'+i.price:'Quote')+'</span></div>';
-  }).join('') + (rawTotal < 180 ? '<div class="co-summary-row" style="font-size:0.82rem;color:var(--muted)"><span>Minimum booking applies</span><span></span></div>' : '') +
+  }).join('')+(rawTotal<180?'<div class="co-summary-row" style="font-size:0.82rem;color:var(--muted)"><span>Minimum booking applies</span><span></span></div>':'')+
   '<div class="co-summary-row total"><span>Total</span><span>'+(total>0?'£'+total:'Quote')+'</span></div>';
   document.getElementById('checkout-modal').classList.add('open');
-  // Load Calendly
-  var el = document.getElementById('calendly-embed');
-  el.innerHTML = '';
-  Calendly.initInlineWidget({
-    url: 'https://calendly.com/aaaplb7/new-meeting',
-    parentElement: el,
-    prefill: {},
-    utm: {}
-  });
 }
-function closeCheckout() { document.getElementById('checkout-modal').classList.remove('open'); }
+function closeCheckout(){document.getElementById('checkout-modal').classList.remove('open');}
 
 // ── PAYMENT ──
-function selectPayment(btn) {
+function selectPayment(btn){
   document.querySelectorAll('.pay-opt').forEach(function(b){b.classList.remove('active')});
-  btn.classList.add('active'); selectedPayment = btn.dataset.val;
-  var note = document.getElementById('pay-note'); note.style.display = 'block';
-  var confirmBtn = document.getElementById('confirm-btn');
-  if (selectedPayment === 'Cash') {
-    note.textContent = '💵 Please have the exact amount ready on the day. Our cleaner will collect payment at your property.';
-    confirmBtn.textContent = 'Confirm & Pick a Date →';
-  } else if (selectedPayment === 'Card') {
-    note.textContent = '💳 Our cleaner will bring a card reader on the day so you can pay by card at your property.';
-    confirmBtn.textContent = 'Confirm & Pick a Date →';
-  } else if (selectedPayment === 'Online') {
-    note.textContent = '🌐 You will be taken to a secure Stripe payment page after confirming. Your total will be pre-filled automatically.';
-    confirmBtn.textContent = 'Confirm & Pay Online →';
-  }
-}
-
-// ── CALENDAR ──
-function initCalendar() {
-  var now = new Date(); calYear = now.getFullYear(); calMonth = now.getMonth();
-  renderCalendar();
-  document.getElementById('cal-prev').onclick = function() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); };
-  document.getElementById('cal-next').onclick = function() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); };
-}
-function renderCalendar() {
-  document.getElementById('cal-month-label').textContent = MONTHS[calMonth] + ' ' + calYear;
-  var container = document.getElementById('cal-days'); container.innerHTML = '';
-  var today = new Date(); today.setHours(0,0,0,0);
-  var startDow = (new Date(calYear,calMonth,1).getDay()+6)%7;
-  var dim = new Date(calYear,calMonth+1,0).getDate();
-  for(var i=0;i<startDow;i++){var e=document.createElement('div');e.className='cal-day empty';container.appendChild(e);}
-  for(var d=1;d<=dim;d++){
-    var btn=document.createElement('button');btn.type='button';btn.className='cal-day';btn.textContent=d;
-    var td=new Date(calYear,calMonth,d);
-    if(td<today){btn.classList.add('disabled');}
-    else{
-      if(td.getTime()===today.getTime())btn.classList.add('today');
-      if(selectedDate&&td.toDateString()===selectedDate.toDateString())btn.classList.add('selected');
-      (function(date,el){el.onclick=function(){selectDate(date);};})(td,btn);
-    }
-    container.appendChild(btn);
-  }
-}
-function selectDate(date) {
-  selectedDate = date; renderCalendar(); updateDatetime();
-}
-document.querySelectorAll('.time-slot').forEach(function(btn) {
-  btn.onclick = function() {
-    document.querySelectorAll('.time-slot').forEach(function(b){b.classList.remove('selected')});
-    btn.classList.add('selected'); selectedTime = btn.dataset.time; updateDatetime();
-  };
-});
-function updateDatetime() {
-  var el = document.getElementById('datetime-confirm');
-  if(selectedDate && selectedTime) el.textContent = '✓ ' + selectedDate.getDate()+' '+MONTHS[selectedDate.getMonth()]+' '+selectedDate.getFullYear()+' at '+selectedTime;
-  else if(selectedDate) el.textContent = 'Now pick a time ↑';
-  else el.textContent = '';
+  btn.classList.add('active');selectedPayment=btn.dataset.val;
+  var note=document.getElementById('pay-note');note.style.display='block';
+  var confirmBtn=document.getElementById('confirm-btn');
+  if(selectedPayment==='Cash'){note.textContent='💵 Please have the exact amount ready on the day.';confirmBtn.textContent='Confirm & Pick a Date →';}
+  else if(selectedPayment==='Card'){note.textContent='💳 Our cleaner will bring a card reader on the day.';confirmBtn.textContent='Confirm & Pick a Date →';}
+  else if(selectedPayment==='Online'){note.textContent='🌐 You will be taken to a secure Stripe payment page after confirming.';confirmBtn.textContent='Confirm & Pay Online →';}
 }
 
 // ── SUBMIT ──
-function submitBooking() {
-  var name = document.getElementById('cust-name').value;
-  var phone = document.getElementById('cust-phone').value;
-  var email = document.getElementById('cust-email').value;
-  var house = document.getElementById('cust-house').value;
-  var address = document.getElementById('cust-address').value;
-  var postcode = document.getElementById('cust-postcode').value;
-  if (!name || !phone || !email || !house || !address || !postcode) { alert('Please fill in all your details.'); return; }
-  if (!cart.length) { alert('Your cart is empty.'); return; }
-
-  var rawTotal = cart.reduce(function(s,i){return s+i.price;},0);
-  var total = Math.max(rawTotal, 180);
-  var services = cart.map(function(i,idx){ return (idx+1)+'. '+i.label+(i.price>0?' — £'+i.price:' — Quote')+(i.detail?' ('+i.detail+')':''); }).join(' | ');
-
-  var btn = document.querySelector('.co-confirm-btn');
-  btn.textContent = 'Sending…'; btn.disabled = true;
-
-  fetch('https://formspree.io/f/mzdweeog', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({
-      _subject: 'New Booking — Leicestershire Cleaning Group',
-      Name: name,
-      Phone: phone,
-      Email: email,
-      Address: house + ' ' + address + ', ' + postcode,
-      Property_Type: introPropType + (introFloors ? ', ' + introFloors + ' floor(s)' : ''),
-      Bedrooms: introBedrooms,
-      Services: services,
-      Total: total > 0 ? '£' + total : 'Quote',
-      Date_and_Time: 'Booked via Calendly — customer will receive confirmation email',
-      Payment: selectedPayment || 'Not specified',
+function submitBooking(){
+  var name=document.getElementById('cust-name').value;
+  var phone=document.getElementById('cust-phone').value;
+  var email=document.getElementById('cust-email').value;
+  var house=document.getElementById('cust-house').value;
+  var address=document.getElementById('cust-address').value;
+  var postcode=document.getElementById('cust-postcode').value;
+  if(!name||!phone||!email||!house||!address||!postcode){alert('Please fill in all your details.');return;}
+  if(!cart.length){alert('Your cart is empty.');return;}
+  var rawTotal=cart.reduce(function(s,i){return s+i.price;},0);
+  var total=Math.max(rawTotal,180);
+  var services=cart.map(function(i,idx){return (idx+1)+'. '+i.label+(i.price>0?' — £'+i.price:' — Quote')+(i.detail?' ('+i.detail+')':'');}).join(' | ');
+  var btn=document.querySelector('.co-confirm-btn');
+  btn.textContent='Sending…';btn.disabled=true;
+  fetch('https://formspree.io/f/mzdweeog',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({
+      _subject:'New Booking — Leicestershire Cleaning Group',
+      Name:name,Phone:phone,Email:email,
+      Address:house+' '+address+', '+postcode,
+      Property_Type:introPropType+(introFloors?', '+introFloors+' floor(s)':''),
+      Clean_Type:selectedSvcTypes.join(', ')||'Not specified',
+      Services:services,
+      Total:total>0?'£'+total:'Quote',
+      Date_and_Time:'Booked via Calendly',
+      Payment:selectedPayment||'Not specified',
     })
-  })
-  .then(function(res) {
-    if (res.ok) {
-      btn.textContent = '✓ Sent!';
-      btn.style.background = 'var(--mint-mid)';
-      btn.style.color = 'var(--green-deep)';
-      setTimeout(function() {
+  }).then(function(res){
+    if(res.ok){
+      btn.textContent='✓ Sent!';btn.style.background='var(--mint-mid)';btn.style.color='var(--green-deep)';
+      setTimeout(function(){
         closeCheckout();
-        document.getElementById('services-step').style.display = 'none';
-        document.getElementById('success-box').style.display = 'block';
-        if (selectedPayment === 'Online') {
-          window.open('https://buy.stripe.com/cNi4gy211elM2eV7Rq6g800?prefilled_amount=' + (total * 100), '_blank');
-        } else {
-          window.open('https://calendly.com/aaaplb7/new-meeting', '_blank');
-        }
-        btn.textContent = 'Confirm & Pick a Date →';
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.disabled = false;
-      }, 2000);
+        document.getElementById('wizard-3').style.display='none';
+        document.getElementById('step-indicator').style.display='none';
+        document.getElementById('step-label').style.display='none';
+        document.getElementById('success-box').style.display='block';
+        if(selectedPayment==='Online'){window.open('https://buy.stripe.com/cNi4gy211elM2eV7Rq6g800?prefilled_amount='+(total*100),'_blank');}
+        else{window.open('https://calendly.com/aaaplb7/new-meeting','_blank');}
+        btn.textContent='Confirm & Pick a Date →';btn.style.background='';btn.style.color='';btn.disabled=false;
+      },2000);
     } else {
-      btn.textContent = 'Confirm & Pick a Date →'; btn.disabled = false;
-      btn.style.background = ''; btn.style.color = '';
+      btn.textContent='Confirm & Pick a Date →';btn.disabled=false;btn.style.background='';btn.style.color='';
       alert('Something went wrong. Please try again or call us directly.');
     }
-  })
-  .catch(function() {
-    btn.textContent = 'Confirm & Pick a Date →'; btn.disabled = false;
-    btn.style.background = ''; btn.style.color = '';
+  }).catch(function(){
+    btn.textContent='Confirm & Pick a Date →';btn.disabled=false;btn.style.background='';btn.style.color='';
     alert('Something went wrong. Please try again or call us directly.');
   });
 }
